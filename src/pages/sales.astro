@@ -1,0 +1,34 @@
+---
+import "../styles/globa.css"
+import { saleEquipment, benefitsBuyingUs } from "../data/sales";
+import Layout from "../layouts/Layout.astro";
+import FeatureCard from "../components/FeatureCard.astro";
+import SalesCard from "../components/SalesCard.astro";
+import Banner from "../components/Banner.astro";
+import sales from "../assets/images/hero/sales.webp";
+---
+
+<Layout>
+  <Banner
+    title="Venta de equipos Eléctricos"
+    description="Conoce los equipos que tenemos en venta y los beneficios de comprar con nosotros."
+    image={sales}
+  />
+  <section class="container mx-auto px-4 pt-20">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {saleEquipment.map((equipment) => <SalesCard {...equipment} />)}
+      </div>
+    </div>
+  </section>
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-12">
+        Beneficios de Comprar con Nosotros
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {benefitsBuyingUs.map((benefit) => <FeatureCard {...benefit} />)}
+      </div>
+    </div>
+  </section>
+</Layout>

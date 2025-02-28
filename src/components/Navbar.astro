@@ -1,0 +1,117 @@
+---
+import "../styles/globa.css"
+import Phone from "../assets/icons/Phone.astro";
+import Menu from "../assets/icons/Menu.astro";
+import Aspa from "../assets/icons/Aspa.astro"
+
+const navItems = [
+  {
+    title: "Inicio",
+    label: "home",
+    url: "/",
+  },
+  {
+    title: "Servicios",
+    label: "services",
+    url: "/services",
+  },
+  {
+    title: "Ventas",
+    label: "sales",
+    url: "/sales",
+  },
+  {
+    title: "Contacto",
+    label: "contact",
+    url: "/contact",
+  },
+];
+---
+
+<nav>
+  <!-- Desktop Menu -->
+  <div class="hidden md:flex gap-8 items-center">
+    {
+      navItems.map((item) => (
+        <a
+          class="md:text-base lg:text-xl font-semibold hover:text-primary transition-colors"
+          href={item.url}
+        >
+          {item.title}
+        </a>
+      ))
+    }
+    <!-- href="tel:+51990032706 -->
+    <a
+      href="tel:+51977824787"
+      class="flex gap-2 items-center bg-primary text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md text-sm md:text-base hover:bg-blue-800 transition duration-300"
+    >
+      <Phone />Llámanos</a
+    >
+  </div>
+</nav>
+
+<!-- Mobile Menu Button -->
+<button id="menu-toggle" class="md:hidden" aria-label="Toggle Menu">
+  <Menu>
+</button>
+
+<!-- Mobile Menu -->
+<div
+  id="mobile-menu"
+  class="fixed inset-0 bg-white transform translate-x-full transition-transform duration-300 md:hidden"
+>
+  <div class="flex flex-col h-full">
+    <div class="flex justify-end p-4">
+      <button id="close-menu" aria-label="Close Menu">
+        <Aspa/>
+      </button>
+    </div>
+    <div class="flex flex-col items-center gap-8 p-8">
+      {
+        navItems.map((item) => (
+          <a
+            class="font-semibold text-xl hover:text-primary transition-colors"
+            href={item.url}
+          >
+            {item.title}
+          </a>
+        ))
+      }
+      <!-- href="tel:+51990032706 -->
+      <a
+        href="tel:+51977824787"
+        class="flex gap-2 items-center bg-primary text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md text-sm md:text-base hover:bg-blue-800 transition duration-300"
+      >
+        <Phone />Llámanos</a
+      >
+    </div>
+  </div>
+</div>
+
+<script>
+  const menuToggle = document.getElementById("menu-toggle");
+  const closeMenu = document.getElementById("close-menu");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const body = document.body;
+
+  function toggleMenu() {
+    if (mobileMenu) {
+      const isOpen = mobileMenu.classList.contains("translate-x-0");
+      mobileMenu.classList.toggle("translate-x-0");
+      mobileMenu.classList.toggle("translate-x-full");
+      body.style.overflow = isOpen ? "auto" : "hidden";
+    }
+  }
+
+  menuToggle?.addEventListener("click", toggleMenu);
+  closeMenu?.addEventListener("click", toggleMenu);
+
+  // Close menu when clicking on a link
+  const mobileLinks = mobileMenu?.querySelectorAll("a");
+  mobileLinks?.forEach((link) => {
+    link.addEventListener("click", () => {
+      toggleMenu();
+    });
+  });
+</script>

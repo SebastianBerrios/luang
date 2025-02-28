@@ -1,0 +1,31 @@
+---
+import "../styles/globa.css"
+import { Image } from 'astro:assets';
+import heroHome from "../assets/images/hero/home.webp"
+---
+
+<section class="relative min-h-screen">
+  <div class="absolute inset-0 bg-cover bg-center bg-no-repeat">
+    <Image
+      class="w-full h-full object-cover"
+      src={heroHome}
+      alt="construction"
+    />
+    <div class="absolute inset-0 bg-black/50"></div>
+  </div>
+  <div class="relative h-full flex items-center justify-center py-16">
+    <div class="text-center text-white px-4 max-w-4xl mx-auto">
+      <h1 class="text-4xl md:text-6xl font-bold mb-6">
+        Ofrecemos ingeniería básica y de detalle, gestión de proyectos y
+        construcción en el sector minero.
+      </h1>
+      <p class="text-xl md:text-2xl mb-8">Una solución para cada cliente</p>
+      <a
+        href="/contact"
+        class="bg-primary text-white px-8 py-3 rounded-md text-lg font-semibold hover:bg-blue-800 transition duration-300"
+      >
+        Contáctanos
+      </a>
+    </div>
+  </div>
+</section>

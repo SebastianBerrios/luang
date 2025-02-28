@@ -1,0 +1,23 @@
+---
+import "../styles/globa.css"
+import { Image } from "astro:assets";
+const { description, image, href } = Astro.props;
+---
+
+<a
+  href={href}
+  class="relative flex items-center justify-center overflow-hidden rounded-lg group h-64"
+>
+  <Image
+    src={image}
+    alt={description}
+    class="w-fit h-fit object-contain object-center justify-self-center transition duration-300 group-hover:scale-110"
+    width={600}
+    height={400}
+  />
+  <div
+    class="absolute inset-0 bg-black/65 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300"
+  >
+    <h3 class="text-white text-xl font-bold text-center">{description}</h3>
+  </div>
+</a>

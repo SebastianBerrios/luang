@@ -1,0 +1,35 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+---
+
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Luang</title>
+
+		<meta name="description" content="Somos una empresa especialista en el desarrollo de Ingeniería Básica, Ingeniería de Detalle, Gestión de Proyectos y Construcción en el sector Minero Metalúrgico con un personal totalmente especializado." />
+
+		<!-- Open Graph (para redes sociales) -->
+		<meta property="og:title" content="Luang Asociados SAC" />
+		<meta property="og:description" content="Somos una empresa especialista en el desarrollo de Ingeniería Básica, Ingeniería de Detalle, Gestión de Proyectos y Construcción en el sector Minero Metalúrgico con un personal totalmente especializado." />
+		<meta property="og:image" content="/imagotipo.svg" />
+		<meta property="og:image:alt" content="Luang Asociados SAC"/>
+
+		<link rel="canonical" href="https://luang.com.pe/">
+
+		<meta name="robots" content="index, follow">
+		<meta name="theme-color" content="#1e3a8a">
+
+		<link rel="icon" type="image/svg+xml" href="/isotipo.svg" />
+
+		<meta name="generator" content={Astro.generator} />
+	</head>
+	<body>
+		<Header/>
+		<slot />
+		<Footer />
+	</body>
+</html>

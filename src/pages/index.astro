@@ -1,0 +1,30 @@
+---
+import "../styles/globa.css"
+import { projects, clients, whyChooseUs } from "../data/home";
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import ImageCard from "../components/ImageCard.astro";
+import FeatureCard from "../components/FeatureCard.astro";
+---
+
+<Layout>
+  <Hero />
+  <section class="container mx-auto py-12">
+    <h2 class="text-4xl font-bold text-center mb-12">Proyectos Destacados</h2>
+    <div class="mx-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+      {projects.map((project) => <ImageCard {...project} />)}
+    </div>
+  </section>
+  <section class="container mx-auto py-12">
+    <h2 class="text-4xl font-bold text-center mb-12">Clientes Destacados</h2>
+    <div class="mx-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+      {clients.map((client) => <ImageCard {...client} />)}
+    </div>
+  </section>
+  <section class="container mx-auto py-12">
+    <h2 class="text-4xl font-bold text-center mb-12">¿Por qué elegirnos?</h2>
+    <div class="mx-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+      {whyChooseUs.map((feature) => <FeatureCard {...feature} />)}
+    </div>
+  </section>
+</Layout>
