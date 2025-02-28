@@ -11,7 +11,7 @@ export interface BenefitsBuyingUsProps {
 
 export const saleEquipment: SaleEquipmentProps[] = [
   {
-    image: "/src/assets/images/products/electricalmaterials.webp",
+    image: "/images/products/electricalmaterials.webp",
     name: "Materiales Eléctricos",
     description:
       "Comercialización de interruptores, tableros y componentes eléctricos de alta calidad de marcas reconocidas como Square D y Schneider Electric.",

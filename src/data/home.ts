@@ -11,15 +11,15 @@ export interface InfoCardProps {
 export const projects: HomeProps[] = [
   {
     description: "Colectores de polvo",
-    image: "/src/assets/images/projects/colectorpolvo.webp",
+    image: "/images/projects/colectorpolvo.webp",
   },
   {
     description: "Planta de Operaciones",
-    image: "/src/assets/images/projects/plantaoperaciones.webp",
+    image: "/images/projects/plantaoperaciones.webp",
   },
   {
     description: "Migración de motores",
-    image: "/src/assets/images/projects/migracionmotores.webp",
+    image: "/images/projects/migracionmotores.webp",
   },
 ];
 
@@ -27,27 +27,27 @@ export const clients: HomeProps[] = [
   {
     description:
       "Empresa de clase minero–metalúrgica mundial, productora de cobre y subproductos valiosos.",
-    image: "/src/assets/images/clients/southern.webp",
+    image: "/images/clients/southern.webp",
   },
   {
     description:
       "Órgano público encargado de la administración superior del departamento de Tacna, Perú.",
-    image: "/src/assets/images/clients/goretacna.webp",
+    image: "/images/clients/goretacna.webp",
   },
   {
     description:
       "Organo público encargado de administrar los tributos internos del Gobierno Nacional.",
-    image: "/src/assets/images/clients/sunat.webp",
+    image: "/images/clients/sunat.webp",
   },
   {
     description:
       "Compañia dedicada a la extracción de minerales polimetálicos y con presencia en el sur del país.",
-    image: "/src/assets/images/clients/minerabetas.webp",
+    image: "/images/clients/minerabetas.webp",
   },
   {
     description:
       "Empresa minera canadiense de metales preciosos con minas y proyectos en América y África Occidental.",
-    image: "/src/assets/images/clients/fortunasilvermines.webp",
+    image: "/images/clients/fortunasilvermines.webp",
   },
 ];
 
