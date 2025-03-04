@@ -1,11 +1,10 @@
 ---
 import "../styles/globa.css"
 import { Image } from "astro:assets";
-const { description, image, href } = Astro.props;
+const { description, image } = Astro.props;
 ---
 
-<a
-  href={href}
+<div
   class="relative flex items-center justify-center overflow-hidden rounded-lg group h-64"
 >
   <Image
@@ -20,4 +19,4 @@ const { description, image, href } = Astro.props;
   >
     <h3 class="text-white text-xl font-bold text-center">{description}</h3>
   </div>
-</a>
+</div>
