@@ -10,7 +10,7 @@ export interface ServicesProps {
 export const services: ServicesProps[] = [
   {
     icon: "Factory",
-    title: "Ingenieria conceptual básica e ingeniería de detalle",
+    title: "Ingeniería conceptual básica e ingeniería de detalle",
     description:
       "Brindamos soluciones en mantenimiento y ejecución de trabajos en plantas operativas.",
     itemList: [
