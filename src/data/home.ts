@@ -21,6 +21,18 @@ export const projects: HomeProps[] = [
     description: "Migración de motores",
     image: "/images/projects/migracionmotores.webp",
   },
+  {
+    description: "Tableros de Control",
+    image: "/images/projects/tableroscontrol.webp",
+  },
+  {
+    description: "Trabajos Eléctricos",
+    image: "/images/projects/trabajoselectricos.webp",
+  },
+  {
+    description: "Obras Civiles",
+    image: "/images/projects/obrasciviles.webp",
+  },
 ];
 
 export const clients: HomeProps[] = [

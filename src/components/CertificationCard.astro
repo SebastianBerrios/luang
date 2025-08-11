@@ -1,0 +1,48 @@
+---
+import "../styles/globa.css"
+import { Icons, type IconKeys } from "../data/icons.ts";
+
+interface Props {
+    icon: IconKeys,
+    name: string,
+    description: string,
+    color: string
+}
+
+const {icon, name, description, color} = Astro.props
+
+const IconComponent = Icons[icon] || null;
+
+// Map color names to Tailwind CSS classes
+const colorClasses = {
+  blue: "text-blue-600",
+  green: "text-green-600", 
+  red: "text-red-600"
+};
+
+const iconColorClass = colorClasses[color as keyof typeof colorClasses] || "text-gray-600";
+
+const colorClassesBg = {
+  blue: "bg-blue-100",
+  green: "bg-green-100", 
+  red: "bg-red-100"
+};
+
+const iconColorClassBg = colorClassesBg[color as keyof typeof colorClassesBg] || "text-gray-600";
+---
+
+
+<div class="bg-white rounded-lg shadow-lg p-8 border border-gray-100 hover:shadow-xl transition-shadow">
+    <div class={`${iconColorClassBg} w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6`}>
+    {IconComponent && <IconComponent class={`${iconColorClass} w-8 h-8`} />}
+    </div>
+    <h3 class="text-xl font-bold text-center mb-4 text-gray-800">{name}</h3>
+    <p class="text-gray-600 text-center mb-4">
+      {description}
+    </p>
+    <div class="text-center">
+      <span class="inline-block bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full">
+        Vigente
+      </span>
+    </div>
+  </div>

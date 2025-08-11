@@ -1,0 +1,28 @@
+---
+import "../styles/globa.css"
+import Layout from "../layouts/Layout.astro";
+import Building from "../assets/icons/Building.astro";
+import Tools from "../assets/icons/Tools.astro";
+import Server from "../assets/icons/Server.astro";
+import Banner from "../components/Banner.astro"
+import certifications from "/public/images/hero/certifications.webp";
+import { certificationsCourses } from "../data/certifications";
+import CertificationCard from "../components/CertificationCard.astro";
+---
+
+<Layout>
+  <Banner
+  title="Certificaciones y Licencias"
+  description="Nuestro compromiso se refleja en nuestras certificaciones y licencias que garantizan la calidad de nuestros servicios y el cumplimiento de los más altos estándares."
+  image={certifications} />
+
+  <section class="container mx-auto py-16">
+    <div class="mx-6">
+      <h2 class="text-4xl font-bold text-center mb-12">Certificaciones Principales</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        {certificationsCourses.map((certification) => (<CertificationCard {...certification}/>))}
+      </div>
+    </div>
+  </section>
+</Layout>

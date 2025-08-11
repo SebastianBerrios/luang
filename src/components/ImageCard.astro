@@ -5,12 +5,12 @@ const { description, image } = Astro.props;
 ---
 
 <div
-  class="relative flex items-center justify-center overflow-hidden rounded-lg group h-64"
+  class="relative flex items-center justify-center overflow-hidden rounded-lg group h-64 w-full"
 >
   <Image
     src={image}
     alt={description}
-    class="w-fit h-fit object-contain object-center justify-self-center transition duration-300 group-hover:scale-110"
+    class="w-full h-full object-cover object-center transition duration-300 group-hover:scale-110"
     width={600}
     height={400}
   />

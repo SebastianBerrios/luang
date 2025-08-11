@@ -5,13 +5,51 @@ import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
 import ImageCard from "../components/ImageCard.astro";
 import FeatureCard from "../components/FeatureCard.astro";
+import CirculeCheck from "../assets/icons/CirculeCheck.astro";
+import LightBulb from "../assets/icons/LightBulb.astro"
 ---
 
 <Layout>
   <Hero />
-  <section class="container mx-auto py-12">
+  <section class="container mx-auto py-16 bg-gray-50">
+    <div class="mx-6">
+      <h2 class="text-4xl font-bold text-center mb-8">Sobre Nosotros</h2>
+      <div class="max-w-4xl mx-auto text-center">
+        <p class="text-lg text-gray-700 leading-relaxed mb-6">
+          Somos una empresa especialista en el desarrollo de Ingeniería Básica, Ingeniería de Detalle, Gestión de Proyectos y Construcción en el sector Minero Metalúrgico.
+        </p>
+        <p class="text-lg text-gray-700 leading-relaxed">
+          El personal Luang es un equipo de profesionales que ofrecen una ventaja única a sus clientes por la experiencia de haber trabajado por años en el rubro Minero. Esto nos permite maximizar el costo-beneficio, asegurando la confiabilidad y operatividad de sus proyectos. Independientemente el tamaño del proyecto, nuestra fortaleza radica en el valor agregado en las etapas tempranas de nuestros proyectos.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="container mx-auto py-16">
+    <div class="mx-6">
+      <h2 class="text-4xl font-bold text-center mb-12">Misión y Visión</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <div class="text-center p-8 bg-white rounded-lg shadow-lg border border-gray-100">
+          <CirculeCheck class="w-20 h-20 bg-primary text-white rounded-full place-self-center mb-6"/>
+          <h3 class="text-2xl font-bold mb-4 text-primary">Misión</h3>
+          <p class="text-gray-700 leading-relaxed">
+            Con nuestra experiencia, conocimiento y responsabilidad del manejo de Ingenería, construcción, mantenimiento de infraestructura, linea de transmisión y equipos en el sector Minero Metalúrgico e industial ofrecemos a nuestros socios comerciales, asesoría, excelente servicio y apoyo constante de nuestros colaboradores
+          </p>
+        </div>
+        <div class="text-center p-8 bg-white rounded-lg shadow-lg border border-gray-100">
+          <LightBulb class="w-20 h-20 p-4 bg-primary text-white rounded-full place-self-center mb-6"/>
+          <h3 class="text-2xl font-bold mb-4 text-primary">Visión</h3>
+          <p class="text-gray-700 leading-relaxed">
+            Obtener una posición de liderazgo y reconocimiento regional en el sector de Ingeniería, servicios y construcción, generando la preferencia de nuestros futuros socios comerciales por la calidad de nuestro servicio, productos y respaldo que ofrece nuestra empresa
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container mx-auto py-12 bg-gray-50">
     <h2 class="text-4xl font-bold text-center mb-12">Proyectos Destacados</h2>
-    <div class="mx-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="mx-6 grid grid-cols-1 md:grid-cols-3 gap-8">
       {projects.map((project) => <ImageCard {...project} />)}
     </div>
   </section>
@@ -21,7 +59,7 @@ import FeatureCard from "../components/FeatureCard.astro";
       {clients.map((client) => <ImageCard {...client} />)}
     </div>
   </section>
-  <section class="container mx-auto py-12">
+  <section class="container mx-auto py-12 bg-gray-50">
     <h2 class="text-4xl font-bold text-center mb-12">¿Por qué elegirnos?</h2>
     <div class="mx-6 grid grid-cols-1 md:grid-cols-3 gap-6">
       {whyChooseUs.map((feature) => <FeatureCard {...feature} />)}
