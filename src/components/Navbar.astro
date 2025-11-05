@@ -31,63 +31,97 @@ const navItems = [
     url: "/contact",
   },
 ];
+
+// Obtener la ruta actual
+const currentPath = Astro.url.pathname;
 ---
 
 <nav>
   <!-- Desktop Menu -->
-  <div class="hidden md:flex gap-8 items-center">
+  <div class="hidden md:flex gap-6 items-center">
     {
-      navItems.map((item) => (
-        <a
-          class="md:text-base lg:text-xl font-semibold hover:text-primary transition-colors"
-          href={item.url}
-        >
-          {item.title}
-        </a>
-      ))
+      navItems.map((item) => {
+        const isActive = currentPath === item.url || 
+          (item.url === "/" && currentPath === "/") ||
+          (item.url !== "/" && currentPath.startsWith(item.url));
+        return (
+          <a
+            class={`relative px-3 py-2 text-sm lg:text-base font-medium transition-all duration-300 ${
+              isActive 
+                ? 'text-primary' 
+                : 'text-gray-700 hover:text-primary'
+            }`}
+            href={item.url}
+          >
+            {item.title}
+            {isActive && (
+              <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"></span>
+            )}
+            <span class="absolute inset-0 bg-primary/5 rounded-md opacity-0 hover:opacity-100 transition-opacity duration-300"></span>
+          </a>
+        );
+      })
     }
     <a
       href="tel:+51990032706"
-      class="flex gap-2 items-center bg-primary text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md text-sm md:text-base hover:bg-blue-800 transition duration-300"
+      class="flex gap-2 items-center bg-gradient-to-r from-primary to-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:from-blue-700 hover:to-primary shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
     >
-      <Phone />Llámanos</a
-    >
+      <Phone class="w-4 h-4" />Llámanos
+    </a>
   </div>
 </nav>
 
 <!-- Mobile Menu Button -->
-<button id="menu-toggle" class="md:hidden" aria-label="Toggle Menu">
-  <Menu>
+<button 
+  id="menu-toggle" 
+  class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors" 
+  aria-label="Toggle Menu"
+>
+  <Menu class="w-6 h-6 text-gray-700" />
 </button>
 
 <!-- Mobile Menu -->
 <div
   id="mobile-menu"
-  class="fixed inset-0 bg-white transform translate-x-full transition-transform duration-300 md:hidden"
+  class="fixed inset-0 bg-white transform translate-x-full transition-transform duration-300 md:hidden z-50"
 >
   <div class="flex flex-col h-full">
-    <div class="flex justify-end p-4">
-      <button id="close-menu" aria-label="Close Menu">
-        <Aspa/>
+    <div class="flex justify-between items-center p-4 border-b border-gray-200 bg-primary/5">
+      <span class="text-lg font-bold text-primary">Menú</span>
+      <button 
+        id="close-menu" 
+        class="p-2 rounded-lg hover:bg-gray-100 transition-colors" 
+        aria-label="Close Menu"
+      >
+        <Aspa class="w-6 h-6 text-gray-700" />
       </button>
     </div>
-    <div class="flex flex-col items-center gap-8 p-8">
+    <div class="flex flex-col gap-2 p-4 overflow-y-auto">
       {
-        navItems.map((item) => (
-          <a
-            class="font-semibold text-xl hover:text-primary transition-colors"
-            href={item.url}
-          >
-            {item.title}
-          </a>
-        ))
+        navItems.map((item) => {
+          const isActive = currentPath === item.url || 
+            (item.url === "/" && currentPath === "/") ||
+            (item.url !== "/" && currentPath.startsWith(item.url));
+          return (
+            <a
+              class={`relative px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 ${
+                isActive 
+                  ? 'bg-primary/10 text-primary border-l-4 border-primary' 
+                  : 'text-gray-700 hover:bg-gray-50 hover:text-primary'
+              }`}
+              href={item.url}
+            >
+              {item.title}
+            </a>
+          );
+        })
       }
       <a
         href="tel:+51990032706"
-        class="flex gap-2 items-center bg-primary text-white px-3 py-1.5 md:px-4 md:py-2 rounded-md text-sm md:text-base hover:bg-blue-800 transition duration-300"
+        class="flex gap-2 items-center justify-center bg-gradient-to-r from-primary to-blue-700 text-white px-4 py-3 rounded-lg text-base font-semibold hover:from-blue-700 hover:to-primary shadow-md hover:shadow-lg transition-all duration-300 mt-4"
       >
-        <Phone />Llámanos</a
-      >
+        <Phone class="w-5 h-5" />Llámanos
+      </a>
     </div>
   </div>
 </div>
