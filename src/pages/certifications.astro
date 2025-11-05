@@ -16,9 +16,12 @@ import CertificationCard from "../components/CertificationCard.astro";
   description="Nuestro compromiso se refleja en nuestras certificaciones y licencias que garantizan la calidad de nuestros servicios y el cumplimiento de los más altos estándares."
   image={certifications} />
 
-  <section class="container mx-auto py-16">
+  <section class="container mx-auto py-20 bg-white">
     <div class="mx-6">
-      <h2 class="text-4xl font-bold text-center mb-12">Certificaciones Principales</h2>
+      <div class="flex items-center justify-center mb-8">
+        <div class="w-16 h-1 bg-gradient-to-r from-primary to-blue-600 rounded-full"></div>
+      </div>
+      <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800">Certificaciones Principales</h2>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         {certificationsCourses.map((certification) => (<CertificationCard {...certification}/>))}
