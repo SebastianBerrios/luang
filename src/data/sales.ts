@@ -14,7 +14,7 @@ export const saleEquipment: SaleEquipmentProps[] = [
     image: "/images/products/electricalmaterials.webp",
     name: "Materiales Eléctricos",
     description:
-      "Comercialización de interruptores, tableros y componentes eléctricos de alta calidad de marcas reconocidas como Square D y Schneider Electric.",
+      "Venta de Componentes Eléctricos e Instrumentación Schneider Electric. Ofrecemos una completa gama de componentes eléctricos y de instrumentación de la marca Schneider Electric, líder mundial en la transformación digital de la energía y la automatización. Nuestra oferta está diseñada para garantizar la seguridad, confiabilidad y máxima eficiencia en sus instalaciones, abarcando desde el sector residencial hasta las aplicaciones industriales más exigentes.",
   },
 ];
 
