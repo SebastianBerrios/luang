@@ -1,16 +1,28 @@
 ---
 import "../styles/globa.css"
 import { Image } from 'astro:assets';
-import heroHome from "/public/images/hero/home.webp"
+import heroHome1 from "/public/images/hero/home/image01.webp"
+import heroHome2 from "/public/images/hero/home/image02.webp"
+import heroHome3 from "/public/images/hero/home/image03.webp"
+import heroHome4 from "/public/images/hero/home/image04.webp"
+
+const heroImages = [heroHome1, heroHome2, heroHome3, heroHome4];
 ---
 
 <section class="relative min-h-screen">
   <div class="absolute inset-0 bg-cover bg-center bg-no-repeat">
-    <Image
-      class="w-full h-full object-cover"
-      src={heroHome}
-      alt="construction"
-    />
+    <div id="hero-slideshow" class="relative w-full h-full">
+      {heroImages.map((image, index) => (
+        <Image
+          class={`hero-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
+            index === 0 ? 'opacity-100' : 'opacity-0'
+          }`}
+          src={image}
+          alt={`Hero image ${index + 1}`}
+          data-index={index}
+        />
+      ))}
+    </div>
     <div class="absolute inset-0 bg-black/50"></div>
   </div>
   <div class="relative h-full flex items-center justify-center py-16">
@@ -29,3 +41,35 @@ import heroHome from "/public/images/hero/home.webp"
     </div>
   </div>
 </section>
+
+<script is:inline>
+  // Intervalo de cambio de imagen en milisegundos (5 segundos por defecto)
+  const INTERVAL_TIME = 5000;
+  
+  // Esperar a que el DOM esté listo
+  document.addEventListener('DOMContentLoaded', function() {
+    // Obtener todas las imágenes del slideshow
+    const slides = document.querySelectorAll('.hero-slide');
+    let currentIndex = 0;
+    
+    function showNextImage() {
+      if (slides.length <= 1) return;
+      
+      // Ocultar imagen actual
+      slides[currentIndex].classList.remove('opacity-100');
+      slides[currentIndex].classList.add('opacity-0');
+      
+      // Calcular siguiente índice
+      currentIndex = (currentIndex + 1) % slides.length;
+      
+      // Mostrar siguiente imagen
+      slides[currentIndex].classList.remove('opacity-0');
+      slides[currentIndex].classList.add('opacity-100');
+    }
+    
+    // Iniciar el slideshow automático solo si hay más de una imagen
+    if (slides.length > 1) {
+      setInterval(showNextImage, INTERVAL_TIME);
+    }
+  });
+</script>
