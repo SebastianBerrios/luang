@@ -2,66 +2,69 @@
 import "../styles/globa.css"
 ---
 
-<footer class="bg-gray-900 text-white py-12">
+<footer class="bg-gradient-to-b from-gray-900 to-gray-800 text-white py-12">
   <div class="max-w-7xl mx-auto px-4">
     <div
       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:justify-items-center gap-10"
     >
       <div>
-        <h3 class="text-xl font-bold mb-4">LUANG ASOCIADOS SAC</h3>
-        <p class="text-gray-400 mb-4">
+        <h3 class="text-xl font-bold mb-4 text-primary">LUANG ASOCIADOS SAC</h3>
+        <p class="text-gray-300 mb-4 leading-relaxed">
           Proveemos a nuestros clientes productos, soluciones y servicios en el
           sector eléctrico industrial y minero.
         </p>
-        <p class="text-gray-400">
+        <p class="text-gray-300 leading-relaxed">
           Nuestra prioridad es satisfacer las necesidades y exigencias de
           nuestros clientes.
         </p>
       </div>
 
       <div>
-        <h3 class="text-xl font-bold mb-4">Enlaces Rápidos</h3>
+        <h3 class="text-xl font-bold mb-4 text-primary">Enlaces Rápidos</h3>
         <ul class="space-y-2">
-          <li><a href="/" class="text-gray-400 hover:text-white">Inicio</a></li>
+          <li><a href="/" class="text-gray-300 hover:text-primary transition-colors duration-300">Inicio</a></li>
           <li>
-            <a href="/services" class="text-gray-400 hover:text-white"
+            <a href="/services" class="text-gray-300 hover:text-primary transition-colors duration-300"
               >Servicios</a
             >
           </li>
           <li>
-            <a href="/sales" class="text-gray-400 hover:text-white">Ventas</a>
+            <a href="/sales" class="text-gray-300 hover:text-primary transition-colors duration-300">Ventas</a>
           </li>
           <li>
-            <a href="/certications" class="text-gray-400 hover:text-white">Certificaciones</a>
+            <a href="/certifications" class="text-gray-300 hover:text-primary transition-colors duration-300">Certificaciones</a>
+          </li>
+          <li>
+            <a href="/contact" class="text-gray-300 hover:text-primary transition-colors duration-300">Contacto</a>
           </li>
         </ul>
       </div>
 
       <div>
-        <h3 class="text-xl font-bold mb-4">Servicios</h3>
+        <h3 class="text-xl font-bold mb-4 text-primary">Servicios</h3>
         <ul class="space-y-2">
           <li>
-            <a href="/services" class="text-gray-400 hover:text-white"
+            <a href="/services" class="text-gray-300 hover:text-primary transition-colors duration-300"
               >Ejecución de proyectos multidisciplinarios</a
             >
           </li>
           <li>
-            <a href="/services" class="text-gray-400 hover:text-white"
+            <a href="/services" class="text-gray-300 hover:text-primary transition-colors duration-300"
               >Fabricación de tableros</a
             >
           </li>
           <li>
-            <a href="/services" class="text-gray-400 hover:text-white"
+            <a href="/services" class="text-gray-300 hover:text-primary transition-colors duration-300"
               >Construcción Industrial</a
             >
           </li>
           <li>
-            <a href="/services" class="text-gray-400 hover:text-white"
+            <a href="/services" class="text-gray-300 hover:text-primary transition-colors duration-300"
               >Instalaciones Eléctricas</a
             >
           </li>
           <li>
-            <a href="/services" class="text-gray-400 hover:text-white"
+            <a href="/services" class="text-gray-300 hover:text-primary transition-colors duration-300"
               >Soluciones Mineras</a
             >
           </li>
@@ -69,19 +72,29 @@ import "../styles/globa.css"
       </div>
 
       <div>
-        <h3 class="text-xl font-bold mb-4">Contacto</h3>
-        <ul class="space-y-2 text-gray-400">
-          <li>Dirección: Parque Industrial Mz. F Sub Lote 7B, Tacna</li>
-          <li>Teléfono: <a href="tel:052411409">(052) 411409</a></li>
-           <li>Celular: <a href="tel:+51990032706">+51 990 032 706</a></li>
+        <h3 class="text-xl font-bold mb-4 text-primary">Contacto</h3>
+        <ul class="space-y-2 text-gray-300">
+          <li class="flex items-start">
+            <span class="mr-2">📍</span>
+            <span>Parque Industrial Mz. F Sub Lote 7B, Tacna</span>
+          </li>
           <li>
-            Email: <a href="mailto:luangsac@gmail.com">luangsac@gmail.com</a>
+            <span class="mr-2">📞</span>
+            <a href="tel:052411409" class="hover:text-primary transition-colors duration-300">(052) 411409</a>
+          </li>
+          <li>
+            <span class="mr-2">📱</span>
+            <a href="tel:+51990032706" class="hover:text-primary transition-colors duration-300">+51 990 032 706</a>
+          </li>
+          <li>
+            <span class="mr-2">✉️</span>
+            <a href="mailto:luangsac@gmail.com" class="hover:text-primary transition-colors duration-300">luangsac@gmail.com</a>
           </li>
         </ul>
       </div>
     </div>
 
-    <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+    <div class="border-t border-gray-700 mt-12 pt-8 text-center text-gray-300">
       <p>
         &copy; {new Date().getFullYear()} LUANG ASOCIADOS SAC. Todos los derechos
         reservados.
