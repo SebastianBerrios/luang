@@ -10,27 +10,55 @@ export interface InfoCardProps {
 
 export const projects: HomeProps[] = [
   {
-    description: "Colectores de polvo",
+    description:
+      "REEMPLAZO E INSTALACIÓN DE COLECTORES DE POLVO 05, 06 Y 07 CHANCADO SECUNDARIO - TOQUEPALA",
     image: "/images/projects/colectorpolvo.webp",
   },
   {
-    description: "Planta de Operaciones",
+    description:
+      "CAMBIO DE SISTEMAS DE ENFRIAMIENTO - CHANCADORAS HP800 - TOQUEPALA",
+    image: "/images/projects/sistemaenfriamiento.webp",
+  },
+  {
+    description: "MANTENIMIENTO DE LA INFRAESTRUCTURA DEL VERTEDERO - TACALAYA",
+    image: "/images/projects/mantenimientoinfraestructura.webp",
+  },
+  {
+    description:
+      "MIGRACIÓN SISTEMA DE COMUNICACIÓN DE RADIOS - RECURSOS HÍDRICOS CUAJONE",
+    image: "/images/projects/sistemacomunicacion.webp",
+  },
+  {
+    description: "NUEVO EQUIPO SEPARADOR CENTRIFUGO TRICANTER - LESDE",
+    image: "/images/projects/separadorcentrifugo.webp",
+  },
+  {
+    description: "REEMPLAZO DE CALDERA KEEWANEE LESDE",
+    image: "/images/projects/reemplazocalderas.webp",
+  },
+  {
+    description:
+      "REEMPLAZO DE COMPRESORA CPT12 PARA PLANTA  DE FILTRO CONCENTRADORA #1 TOQUEPALA",
+    image: "/images/projects/reemplazocompresora.webp",
+  },
+  {
+    description: "PLANTA DE OPERACIONES",
     image: "/images/projects/plantaoperaciones.webp",
   },
   {
-    description: "Migración de motores",
+    description: "MIGRACIÓN DE MOTORES",
     image: "/images/projects/migracionmotores.webp",
   },
   {
-    description: "Tableros de Control",
+    description: "TABLEROS DE CONTROL",
     image: "/images/projects/tableroscontrol.webp",
   },
   {
-    description: "Trabajos Eléctricos",
+    description: "TRABAJOS ELECTRICOS",
     image: "/images/projects/trabajoselectricos.webp",
   },
   {
-    description: "Obras Civiles",
+    description: "OBRAS CIVILES",
     image: "/images/projects/obrasciviles.webp",
   },
 ];
