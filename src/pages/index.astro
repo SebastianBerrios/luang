@@ -1,9 +1,9 @@
 ---
 import "../styles/globa.css"
-import { projects, clients, whyChooseUs } from "../data/home";
+import { clients, whyChooseUs } from "../data/home";
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
-import ImageCard from "../components/ImageCard.astro";
+import ProjectsSection from "../components/ProjectsSection.astro";
 import ClientCard from "../components/ClientCard.astro";
 import FeatureCard from "../components/FeatureCard.astro";
 import CirculeCheck from "../assets/icons/CirculeCheck.astro";
@@ -58,17 +58,7 @@ import LightBulb from "../assets/icons/LightBulb.astro"
     </div>
   </section>
 
-  <section class="container mx-auto py-20 bg-linear-to-b from-gray-50 to-white">
-    <div class="mx-6">
-      <div class="flex items-center justify-center mb-8">
-        <div class="w-16 h-1 bg-linear-to-r from-primary to-blue-600 rounded-full"></div>
-      </div>
-      <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800">Proyectos Destacados</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-        {projects.map((project) => <ImageCard {...project} />)}
-      </div>
-    </div>
-  </section>
+  <ProjectsSection />
   <section class="container mx-auto py-20 bg-white">
     <div class="mx-6">
       <div class="flex items-center justify-center mb-8">

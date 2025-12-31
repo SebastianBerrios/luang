@@ -1,0 +1,430 @@
+---
+import "../styles/globa.css";
+import { projects } from "../data/home";
+import { getAllProjectImages } from "../utils/projectImages";
+import ProjectCard from "./ProjectCard.astro";
+
+// Escanear imágenes en build time (servidor)
+const projectImagesMap = getAllProjectImages(projects);
+
+// Crear un array de proyectos con sus imágenes válidas
+const projectsWithImages = projects.map((project, index) => ({
+  ...project,
+  projectId: `project-${index}`,
+  images: projectImagesMap.get(project.image) || [],
+}));
+---
+
+<section class="container mx-auto py-20 bg-linear-to-b from-gray-50 to-white">
+  <div class="mx-6">
+    <div class="flex items-center justify-center mb-8">
+      <div class="w-16 h-1 bg-linear-to-r from-primary to-blue-600 rounded-full"></div>
+    </div>
+    <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800">Proyectos Destacados</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+      {projectsWithImages.map((project) => (
+        <ProjectCard
+          title={project.title}
+          description={project.description}
+          image={project.image}
+          projectId={project.projectId}
+          images={project.images}
+        />
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- Modales para cada proyecto -->
+{projectsWithImages.map((project) => (
+  <div
+    id={`modal-container-${project.projectId}`}
+    class="modal-container"
+    data-project-id={project.projectId}
+    data-images={JSON.stringify(project.images)}
+    data-title={project.title}
+    data-description={project.description}
+  ></div>
+))}
+
+<script>
+  const modalContainers = new Map();
+  let currentModalId = null;
+
+  // Inicializar contenedores de modal
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".modal-container").forEach(function(container) {
+      const projectId = container.getAttribute('data-project-id');
+      if (projectId) {
+        modalContainers.set(projectId, container);
+      }
+    });
+  });
+
+  // Función global para cerrar modal (disponible siempre)
+  function closeModal() {
+    if (!currentModalId) return;
+    
+    const modal = document.getElementById("modal-" + currentModalId);
+    if (modal) {
+      modal.style.display = "none";
+    }
+    document.body.style.overflow = "";
+    
+    const container = modalContainers.get(currentModalId);
+    if (container) {
+      container.innerHTML = "";
+    }
+    
+    currentModalId = null;
+  }
+
+  // Escuchar evento para abrir modal
+  document.addEventListener("openProjectModal", function(e) {
+    try {
+      const detail = e.detail;
+      const projectId = detail.projectId;
+      const title = detail.title || "";
+      const description = detail.description || "";
+      const images = Array.isArray(detail.images) ? detail.images : [];
+      
+      console.log("Abriendo modal con datos:", {
+        projectId: projectId,
+        title: title,
+        description: description.substring(0, 50) + "...",
+        imagesCount: images.length,
+        firstImage: images[0]
+      });
+      
+      openModal(projectId, title, description, images);
+    } catch (error) {
+      console.error("Error al abrir modal:", error);
+    }
+  });
+
+  function openModal(projectId, title, description, images) {
+    try {
+      // Validar datos
+      if (!projectId) {
+        console.error("No se proporcionó projectId");
+        return;
+      }
+
+      if (!Array.isArray(images) || images.length === 0) {
+        console.warn("No hay imágenes para mostrar en el modal:", projectId);
+        // Aún así, mostrar el modal con mensaje
+      }
+
+      // Limpiar modal anterior si existe
+      if (currentModalId) {
+        closeModal();
+      }
+
+      currentModalId = projectId;
+
+      const container = modalContainers.get(projectId);
+      if (!container) {
+        console.error("No se encontró el contenedor para el proyecto:", projectId);
+        return;
+      }
+
+      // Limpiar contenedor antes de agregar nuevo contenido
+      container.innerHTML = "";
+
+      // Crear HTML del modal
+      const modalHTML = createModalHTML(projectId, title, description, images);
+      
+      // Insertar HTML
+      container.innerHTML = modalHTML;
+      
+      // Obtener el modal recién creado
+      const modal = container.querySelector(".modal-backdrop");
+      if (!modal) {
+        console.error("No se pudo encontrar el elemento modal después de crearlo");
+        return;
+      }
+
+      // Mostrar modal
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+
+      // Asignar event listeners de CIERRE INMEDIATAMENTE (antes de inicializar imágenes)
+      setupCloseListeners(projectId);
+
+      // Inicializar funcionalidad del modal después de que se inserte en el DOM
+      setTimeout(function() {
+        try {
+          initializeModal(projectId, images);
+        } catch (error) {
+          console.error("Error al inicializar modal:", error);
+          // Aunque falle, el usuario puede cerrar el modal
+        }
+      }, 50);
+    } catch (error) {
+      console.error("Error crítico al abrir modal:", error);
+      // Asegurar que el modal se pueda cerrar incluso si hay error
+      if (currentModalId) {
+        setupCloseListeners(currentModalId);
+      }
+    }
+  }
+
+  // Función separada para asignar listeners de cierre (siempre disponible)
+  function setupCloseListeners(projectId) {
+    const modal = document.getElementById("modal-" + projectId);
+    if (!modal) return;
+
+    // Remover listeners anteriores si existen
+    const newCloseBtn = modal.querySelector(".modal-close");
+    if (newCloseBtn && newCloseBtn.parentNode) {
+      // Clonar y reemplazar para remover listeners anteriores
+      const newBtn = newCloseBtn.cloneNode(true);
+      newCloseBtn.parentNode.replaceChild(newBtn, newCloseBtn);
+      newBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        closeModal();
+      });
+    }
+
+    // Backdrop click
+    modal.addEventListener("click", function(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    // Keyboard Escape
+    function handleEscape(e) {
+      if (e.key === "Escape" && currentModalId === projectId) {
+        closeModal();
+        document.removeEventListener("keydown", handleEscape);
+      }
+    }
+    document.addEventListener("keydown", handleEscape);
+  }
+
+  function createModalHTML(projectId, title, description, images) {
+    // Escapar HTML para prevenir XSS
+    const escapeHtml = function(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    };
+
+    const safeTitle = escapeHtml(title || "");
+    const safeDescription = escapeHtml(description || "");
+
+    // Crear HTML de slides de forma segura
+    let slidesHTML = "";
+    if (Array.isArray(images) && images.length > 0) {
+      slidesHTML = images.map(function(imgPath, index) {
+        const safePath = escapeHtml(imgPath);
+        const isFirst = index === 0;
+        return '<img src="' + safePath + '" alt="' + safeTitle + ' - Imagen ' + (index + 1) + '" class="modal-slide absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ease-in-out ' + (isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0') + '" data-index="' + index + '" loading="' + (isFirst ? 'eager' : 'lazy') + '" onerror="console.error(\'Error al cargar imagen:\', this.src); this.style.display=\'none\';" />';
+      }).join("");
+    } else {
+      // Si no hay imágenes, mostrar mensaje
+      slidesHTML = '<div class="absolute inset-0 flex items-center justify-center text-gray-400"><p>No hay imágenes disponibles</p></div>';
+    }
+
+    // Crear HTML de dots
+    let dotsHTML = "";
+    if (Array.isArray(images) && images.length > 1) {
+      dotsHTML = images.map(function(_, index) {
+        const isFirst = index === 0;
+        return '<button class="modal-dot w-2 h-2 rounded-full transition-all duration-200 ' + (isFirst ? 'bg-white w-8' : 'bg-white/50') + '" data-index="' + index + '" data-project-id="' + escapeHtml(projectId) + '" aria-label="Ir a imagen ' + (index + 1) + '"></button>';
+      }).join("");
+    }
+
+    // Construir HTML completo
+    const navigationHTML = (Array.isArray(images) && images.length > 1) ? `
+      <button class="modal-prev absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-20" aria-label="Imagen anterior" data-project-id="${escapeHtml(projectId)}" data-direction="prev">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button class="modal-next absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-20" aria-label="Imagen siguiente" data-project-id="${escapeHtml(projectId)}" data-direction="next">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+        ${dotsHTML}
+      </div>
+    ` : "";
+
+    const descriptionHTML = safeDescription ? `
+      <div class="p-6">
+        <p class="text-gray-700 leading-relaxed text-lg">${safeDescription}</p>
+      </div>
+    ` : "";
+
+    return `
+      <div id="modal-${escapeHtml(projectId)}" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity duration-300" role="dialog" aria-modal="true" aria-labelledby="modal-title-${escapeHtml(projectId)}">
+        <div class="relative w-full h-full max-w-6xl max-h-[90vh] mx-4 my-4 bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col">
+          <div class="flex items-center justify-between p-6 border-b border-gray-200 bg-white">
+            <h2 id="modal-title-${escapeHtml(projectId)}" class="text-2xl md:text-3xl font-bold text-gray-800 pr-4">
+              ${safeTitle}
+            </h2>
+            <button class="modal-close text-gray-500 hover:text-gray-700 transition-colors duration-200 p-2 hover:bg-gray-100 rounded-full" aria-label="Cerrar modal" data-project-id="${escapeHtml(projectId)}">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div class="flex-1 overflow-y-auto">
+            <div class="relative w-full bg-gray-100" style="min-height: 400px; position: relative;">
+              <div class="modal-slider-container relative w-full h-full" style="min-height: 400px;" data-project-id="${escapeHtml(projectId)}">
+                ${slidesHTML}
+              </div>
+              ${navigationHTML}
+            </div>
+            ${descriptionHTML}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function initializeModal(projectId, images) {
+    try {
+      const modal = document.getElementById("modal-" + projectId);
+      if (!modal) {
+        console.warn("No se encontró el modal:", projectId);
+        return;
+      }
+
+      const sliderContainer = modal.querySelector(".modal-slider-container");
+      if (!sliderContainer) {
+        console.warn("No se encontró el contenedor del slider");
+        return;
+      }
+
+      const slides = Array.from(sliderContainer.querySelectorAll(".modal-slide"));
+      console.log("Slides encontrados:", slides.length);
+
+      if (slides.length === 0) {
+        console.warn("No se encontraron slides en el modal");
+        return;
+      }
+
+      // Asegurar que la primera imagen sea visible
+      if (slides.length > 0) {
+        const firstSlide = slides[0];
+        if (firstSlide && firstSlide.style) {
+          firstSlide.style.opacity = "1";
+          firstSlide.style.zIndex = "10";
+        }
+        for (let i = 1; i < slides.length; i++) {
+          const slide = slides[i];
+          if (slide && slide.style) {
+            slide.style.opacity = "0";
+            slide.style.zIndex = "0";
+          }
+        }
+      }
+
+      // Si solo hay una imagen, ocultar controles de navegación
+      if (slides.length === 1) {
+        const prevBtn = modal.querySelector(".modal-prev");
+        const nextBtn = modal.querySelector(".modal-next");
+        const dotsContainer = modal.querySelector(".absolute.bottom-4");
+        if (prevBtn) prevBtn.style.display = "none";
+        if (nextBtn) nextBtn.style.display = "none";
+        if (dotsContainer) dotsContainer.style.display = "none";
+        return;
+      }
+
+      // Inicializar navegación solo si hay múltiples imágenes
+      setupNavigation();
+
+      function setupNavigation() {
+        let currentIndex = 0;
+
+        function showSlide(index) {
+          if (index < 0 || index >= slides.length) return;
+          
+          slides.forEach(function(slide, i) {
+            if (slide && slide.style) {
+              if (i === index) {
+                slide.style.opacity = "1";
+                slide.style.zIndex = "10";
+              } else {
+                slide.style.opacity = "0";
+                slide.style.zIndex = "0";
+              }
+            }
+          });
+          updateDots(index);
+        }
+
+        function updateDots(index) {
+          const dots = modal.querySelectorAll(".modal-dot");
+          dots.forEach(function(dot, i) {
+            if (i === index) {
+              dot.classList.add("bg-white", "w-8");
+              dot.classList.remove("bg-white/50");
+            } else {
+              dot.classList.remove("bg-white", "w-8");
+              dot.classList.add("bg-white/50");
+            }
+          });
+        }
+
+        function nextSlide() {
+          currentIndex = (currentIndex + 1) % slides.length;
+          showSlide(currentIndex);
+        }
+
+        function prevSlide() {
+          currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+          showSlide(currentIndex);
+        }
+
+        // Navigation buttons
+        const nextBtn = modal.querySelector(".modal-next");
+        const prevBtn = modal.querySelector(".modal-prev");
+
+        if (nextBtn) {
+          nextBtn.addEventListener("click", function(e) {
+            e.stopPropagation();
+            nextSlide();
+          });
+        }
+        if (prevBtn) {
+          prevBtn.addEventListener("click", function(e) {
+            e.stopPropagation();
+            prevSlide();
+          });
+        }
+
+        // Dots navigation
+        const dots = modal.querySelectorAll(".modal-dot");
+        dots.forEach(function(dot, index) {
+          dot.addEventListener("click", function(e) {
+            e.stopPropagation();
+            currentIndex = index;
+            showSlide(currentIndex);
+          });
+        });
+
+        // Keyboard navigation (solo flechas, Escape ya está manejado globalmente)
+        function handleKeyDown(e) {
+          if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            prevSlide();
+          } else if (e.key === "ArrowRight") {
+            e.preventDefault();
+            nextSlide();
+          }
+        }
+        modal.addEventListener("keydown", handleKeyDown);
+
+        // Inicializar con la primera imagen visible
+        showSlide(0);
+      }
+    } catch (error) {
+      console.error("Error al inicializar modal:", error);
+    }
+  }
+</script>

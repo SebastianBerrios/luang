@@ -1,0 +1,164 @@
+---
+import "../styles/globa.css";
+import type { HomeProps } from "../data/home";
+
+interface Props extends HomeProps {
+  projectId: string;
+  images: string[];
+}
+
+const { title, description, projectId, images } = Astro.props;
+---
+
+<div
+  class="group overflow-hidden rounded-xl bg-white shadow-lg border border-gray-100 hover:shadow-xl hover:border-primary/20 transition-all duration-300 cursor-pointer"
+  data-project-id={projectId}
+  data-title={title}
+  data-description={description}
+  data-images={JSON.stringify(images)}
+>
+  <div class="relative overflow-hidden aspect-video bg-gray-100">
+    <div class="project-slider-container w-full h-full relative" data-project-id={projectId}>
+      {images.length > 0 ? (
+        images.map((imgPath, index) => (
+          <img
+            src={imgPath}
+            alt={`${title} - Imagen ${index + 1}`}
+            class={`project-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
+              index === 0 ? "opacity-100" : "opacity-0"
+            }`}
+            data-index={index}
+            loading={index === 0 ? "eager" : "lazy"}
+          />
+        ))
+      ) : (
+        <div class="absolute inset-0 flex items-center justify-center text-gray-400">
+          <span>Sin imágenes</span>
+        </div>
+      )}
+    </div>
+    <div class="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+  </div>
+  <div class="p-5">
+    <h3 class="text-base font-semibold text-gray-800 leading-snug group-hover:text-primary transition-colors duration-300 line-clamp-2">
+      {title}
+    </h3>
+  </div>
+</div>
+
+<script>
+  // Inicializar el slider cuando el componente sea visible
+  document.addEventListener("DOMContentLoaded", function() {
+    // Buscar todas las tarjetas de proyecto
+    const projectCards = document.querySelectorAll('[data-project-id][data-images]');
+    
+    projectCards.forEach(function(container) {
+      const projectId = container.getAttribute('data-project-id');
+      const imagesData = container.getAttribute('data-images');
+      const title = container.getAttribute('data-title') || '';
+      const description = container.getAttribute('data-description') || '';
+      
+      if (!projectId || !imagesData) return;
+      
+      const images = JSON.parse(imagesData);
+      
+      // Función para abrir el modal
+      function openModal() {
+        const event = new CustomEvent("openProjectModal", {
+          detail: {
+            projectId: projectId,
+            title: title,
+            description: description,
+            images: images,
+          },
+        });
+        document.dispatchEvent(event);
+      }
+
+      const sliderContainer = container.querySelector(".project-slider-container");
+      if (!sliderContainer) {
+        // Si no hay slider container, solo agregar el click handler
+        if (images.length > 0) {
+          container.addEventListener("click", openModal);
+        }
+        return;
+      }
+
+      const slides = Array.from(sliderContainer.querySelectorAll(".project-slide"));
+
+      // Si no hay imágenes o solo hay una, no inicializar slider
+      if (slides.length <= 1) {
+        // Aún así, permitir abrir el modal al hacer clic
+        if (images.length > 0) {
+          container.addEventListener("click", openModal);
+        }
+        return;
+      }
+
+      // Inicializar slider solo si hay múltiples imágenes
+      initializeSlider();
+
+      function initializeSlider() {
+        let currentIndex = 0;
+        let intervalId = null;
+        let isPaused = false;
+
+        function showSlide(index) {
+          slides.forEach(function(slide, i) {
+            slide.style.opacity = i === index ? "1" : "0";
+          });
+        }
+
+        function nextSlide() {
+          currentIndex = (currentIndex + 1) % slides.length;
+          showSlide(currentIndex);
+        }
+
+        function startSlider() {
+          if (intervalId !== null) return;
+          intervalId = window.setInterval(function() {
+            if (!isPaused) {
+              nextSlide();
+            }
+          }, 4000); // Cambiar cada 4 segundos
+        }
+
+        function stopSlider() {
+          if (intervalId !== null) {
+            clearInterval(intervalId);
+            intervalId = null;
+          }
+        }
+
+        // Pausar en hover
+        container.addEventListener("mouseenter", function() {
+          isPaused = true;
+        });
+        container.addEventListener("mouseleave", function() {
+          isPaused = false;
+        });
+
+        // Abrir modal al hacer clic
+        container.addEventListener("click", openModal);
+
+        // Iniciar slider
+        startSlider();
+
+        // Cleanup al desmontar (si es necesario)
+        const observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              startSlider();
+            } else {
+              stopSlider();
+            }
+          });
+        });
+
+        if (sliderContainer) {
+          observer.observe(sliderContainer);
+        }
+      }
+    });
+  });
+</script>
