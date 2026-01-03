@@ -61,13 +61,15 @@ const projectsWithImages = projects.map((project, index) => ({
     });
   });
 
-  // Función global para cerrar modal (disponible siempre)
+  // Función para cerrar modal - MEJORADA para debugging
   function closeModal() {
+    console.log("closeModal() llamada, currentModalId:", currentModalId);
     if (!currentModalId) return;
     
     const modal = document.getElementById("modal-" + currentModalId);
     if (modal) {
       modal.style.display = "none";
+      console.log("Modal ocultado:", currentModalId);
     }
     document.body.style.overflow = "";
     
@@ -169,26 +171,33 @@ const projectsWithImages = projects.map((project, index) => ({
     }
   }
 
-  // Función separada para asignar listeners de cierre (siempre disponible)
+  // Función separada para asignar listeners de cierre - CORREGIDA
   function setupCloseListeners(projectId) {
-    const modal = document.getElementById("modal-" + projectId);
-    if (!modal) return;
+    const modalBackdrop = document.getElementById("modal-" + projectId);
+    if (!modalBackdrop) {
+      console.log("No se encontró modalBackdrop para:", projectId);
+      return;
+    }
 
-    // Remover listeners anteriores si existen
-    const newCloseBtn = modal.querySelector(".modal-close");
-    if (newCloseBtn && newCloseBtn.parentNode) {
-      // Clonar y reemplazar para remover listeners anteriores
-      const newBtn = newCloseBtn.cloneNode(true);
-      newCloseBtn.parentNode.replaceChild(newBtn, newCloseBtn);
-      newBtn.addEventListener("click", function(e) {
+    console.log("Configurando listeners para:", projectId);
+
+    // Botón de cerrar (X)
+    const closeBtn = modalBackdrop.querySelector(".modal-close");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function(e) {
+        console.log("Click en botón X");
         e.stopPropagation();
         closeModal();
       });
     }
 
-    // Backdrop click
-    modal.addEventListener("click", function(e) {
-      if (e.target === modal) {
+    // BACKDROP CLICK - SOLUCIÓN DEFINITIVA
+    // El backdrop es el div más externo con fondo oscuro
+    modalBackdrop.addEventListener("click", function(e) {
+      console.log("Click detectado en:", e.target.className);
+      // Verificar si el click fue en el backdrop directamente (no en elementos hijos)
+      if (e.target.classList.contains('modal-backdrop')) {
+        console.log("Click en backdrop confirmado - cerrando");
         closeModal();
       }
     });
@@ -196,6 +205,7 @@ const projectsWithImages = projects.map((project, index) => ({
     // Keyboard Escape
     function handleEscape(e) {
       if (e.key === "Escape" && currentModalId === projectId) {
+        console.log("Escape presionado - cerrando");
         closeModal();
         document.removeEventListener("keydown", handleEscape);
       }
@@ -214,16 +224,21 @@ const projectsWithImages = projects.map((project, index) => ({
     const safeTitle = escapeHtml(title || "");
     const safeDescription = escapeHtml(description || "");
 
-    // Crear HTML de slides de forma segura
+    // Crear HTML de slides con fondo difuminado
     let slidesHTML = "";
     if (Array.isArray(images) && images.length > 0) {
       slidesHTML = images.map(function(imgPath, index) {
         const safePath = escapeHtml(imgPath);
         const isFirst = index === 0;
-        return '<img src="' + safePath + '" alt="' + safeTitle + ' - Imagen ' + (index + 1) + '" class="modal-slide absolute inset-0 w-full h-full object-contain transition-opacity duration-500 ease-in-out ' + (isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0') + '" data-index="' + index + '" loading="' + (isFirst ? 'eager' : 'lazy') + '" onerror="console.error(\'Error al cargar imagen:\', this.src); this.style.display=\'none\';" />';
+        // Cada slide tiene: fondo difuminado + imagen nítida encima
+        return `
+          <div class="modal-slide-wrapper absolute inset-0 transition-opacity duration-500 ease-in-out ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}" data-index="${index}">
+            <div class="absolute inset-0 bg-cover bg-center blur-2xl opacity-40" style="background-image: url('${safePath}');"></div>
+            <img src="${safePath}" alt="${safeTitle} - Imagen ${index + 1}" class="relative w-full h-full object-contain z-10" loading="${isFirst ? 'eager' : 'lazy'}" onerror="console.error('Error al cargar imagen:', this.src); this.parentElement.style.display='none';" />
+          </div>
+        `;
       }).join("");
     } else {
-      // Si no hay imágenes, mostrar mensaje
       slidesHTML = '<div class="absolute inset-0 flex items-center justify-center text-gray-400"><p>No hay imágenes disponibles</p></div>';
     }
 
@@ -238,13 +253,13 @@ const projectsWithImages = projects.map((project, index) => ({
 
     // Construir HTML completo
     const navigationHTML = (Array.isArray(images) && images.length > 1) ? `
-      <button class="modal-prev absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-20" aria-label="Imagen anterior" data-project-id="${escapeHtml(projectId)}" data-direction="prev">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button class="modal-prev absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 md:p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-20" aria-label="Imagen anterior" data-project-id="${escapeHtml(projectId)}" data-direction="prev">
+        <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
       </button>
-      <button class="modal-next absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-20" aria-label="Imagen siguiente" data-project-id="${escapeHtml(projectId)}" data-direction="next">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button class="modal-next absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 md:p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-20" aria-label="Imagen siguiente" data-project-id="${escapeHtml(projectId)}" data-direction="next">
+        <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
       </button>
@@ -254,32 +269,39 @@ const projectsWithImages = projects.map((project, index) => ({
     ` : "";
 
     const descriptionHTML = safeDescription ? `
-      <div class="p-6">
-        <p class="text-gray-700 leading-relaxed text-lg">${safeDescription}</p>
+      <div class="p-4 md:p-6 bg-white">
+        <p class="text-gray-700 leading-relaxed text-base md:text-lg">${safeDescription}</p>
       </div>
     ` : "";
 
+    // ESTRUCTURA: Modal con fondo de imagen difuminado
     return `
-      <div id="modal-${escapeHtml(projectId)}" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm transition-opacity duration-300" role="dialog" aria-modal="true" aria-labelledby="modal-title-${escapeHtml(projectId)}">
-        <div class="relative w-full h-full max-w-6xl max-h-[90vh] mx-4 my-4 bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col">
-          <div class="flex items-center justify-between p-6 border-b border-gray-200 bg-white">
-            <h2 id="modal-title-${escapeHtml(projectId)}" class="text-2xl md:text-3xl font-bold text-gray-800 pr-4">
-              ${safeTitle}
-            </h2>
-            <button class="modal-close text-gray-500 hover:text-gray-700 transition-colors duration-200 p-2 hover:bg-gray-100 rounded-full" aria-label="Cerrar modal" data-project-id="${escapeHtml(projectId)}">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-          <div class="flex-1 overflow-y-auto">
-            <div class="relative w-full bg-gray-100" style="min-height: 400px; position: relative;">
-              <div class="modal-slider-container relative w-full h-full" style="min-height: 400px;" data-project-id="${escapeHtml(projectId)}">
-                ${slidesHTML}
-              </div>
-              ${navigationHTML}
+      <div id="modal-${escapeHtml(projectId)}" class="modal-backdrop fixed inset-0 z-50 bg-black/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title-${escapeHtml(projectId)}">
+        <div class="flex items-center justify-center w-full h-full">
+          <div class="modal-content-wrapper relative w-full max-w-4xl max-h-[90vh] bg-white rounded-xl shadow-2xl overflow-y-auto flex flex-col">
+            <!-- Header fijo -->
+            <div class="flex items-center justify-between p-4 md:p-6 border-b border-gray-200 bg-white sticky top-0 z-10 flex-shrink-0">
+              <h2 id="modal-title-${escapeHtml(projectId)}" class="text-xl md:text-2xl font-bold text-gray-800 pr-4">
+                ${safeTitle}
+              </h2>
+              <button class="modal-close text-gray-500 hover:text-gray-700 transition-colors duration-200 p-2 hover:bg-gray-100 rounded-full flex-shrink-0" aria-label="Cerrar modal" data-project-id="${escapeHtml(projectId)}">
+                <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
-            ${descriptionHTML}
+            
+            <!-- Contenido con scroll -->
+            <div class="flex-1">
+              <!-- Contenedor de imagen con fondo difuminado -->
+              <div class="relative w-full h-[40vh] md:h-[55vh] bg-gray-100 overflow-hidden flex items-center justify-center">
+                <div class="modal-slider-container relative w-full h-full" data-project-id="${escapeHtml(projectId)}">
+                  ${slidesHTML}
+                </div>
+                ${navigationHTML}
+              </div>
+              ${descriptionHTML}
+            </div>
           </div>
         </div>
       </div>
@@ -300,7 +322,7 @@ const projectsWithImages = projects.map((project, index) => ({
         return;
       }
 
-      const slides = Array.from(sliderContainer.querySelectorAll(".modal-slide"));
+      const slides = Array.from(sliderContainer.querySelectorAll(".modal-slide-wrapper"));
       console.log("Slides encontrados:", slides.length);
 
       if (slides.length === 0) {
