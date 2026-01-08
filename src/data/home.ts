@@ -68,11 +68,11 @@ export const projects: HomeProps[] = [
       "El proyecto consiste en reemplazar la compresora CPT12 en la Planta de Filtro Concentradora #1 de Toquepala. Este equipo es vital para la operación de filtros prensa (deshidratación de mineral), aire de instrumentación y tareas de mantenimiento. La sustitución busca modernizar la infraestructura para mejorar la eficiencia energética, reducir costos operativos y garantizar la fiabilidad del sistema. Así, se minimizan las paradas no programadas y se asegura la continuidad del procesamiento de minerales.",
     image: "/images/projects/compresora-cpt12",
   },
-  {
+  /*{
     title: "MODIFICACIONES AUXILIARES EN LA PLANTA DE FILTRADO",
     description: "",
     image: "/images/projects/auxiliares-planta",
-  },
+  },*/
 ];
 
 export const clients: HomeProps[] = [
