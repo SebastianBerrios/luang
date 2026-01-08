@@ -11,6 +11,13 @@ export interface InfoCardProps {
 
 export const projects: HomeProps[] = [
   {
+    title:
+      "REEMPLAZO E INSTALACIÓN DE COLECTORES DE POLVO 05, 06 Y 07 CHANCADO SECUNDARIO - TOQUEPALA",
+    description:
+      "Este proyecto se enfoca en el desmontaje de tres colectores de polvo obsoletos y la ingeniería, suministro e instalación de tres nuevos sistemas de alta eficiencia en el área de Chancado Secundario de la concentradora de Toquepala. El objetivo es mejorar drásticamente el control de emisiones de polvo fugitivo generado en los procesos de trituración, transferencia en fajas y clasificación de mineral. Con esto se busca asegurar el cumplimiento de las normativas ambientales y de salud ocupacional, proteger los equipos mecánicos y eléctricos del área y crear un ambiente de trabajo más seguro.",
+    image: "/images/projects/colectores-polvo",
+  },
+  {
     title: "CAMBIO DE SISTEMAS DE ENFRIAMIENTO - CHANCADORAS HP800-TOQUEPALA",
     description:
       "Este proyecto se centra en la actualización y reemplazo de los sistemas de enfriamiento de las chancadoras (trituradoras) de cono modelo HP800 en la mina de Toquepala. En esencia, el objetivo es mejorar la eficiencia y la confiabilidad de estas máquinas, que son cruciales para el procesamiento de mineral. El sistema de enfriamiento es vital para mantener la temperatura de operación adecuada de los componentes principales de la chancadora, como los sistemas de lubricación y los cojinetes.",
@@ -56,17 +63,10 @@ export const projects: HomeProps[] = [
   },
   {
     title:
-      "REEMPLAZO DE COMPRESORA CPT12 PARA PLANTA  DE FILTRO CONCENTRADORA #1 TOQUEPALA",
+      "REEMPLAZO DE COMPRESORA CPT12 PARA PLANTA DE FILTRO CONCENTRADORA #1 TOQUEPALA",
     description:
       "El proyecto consiste en reemplazar la compresora CPT12 en la Planta de Filtro Concentradora #1 de Toquepala. Este equipo es vital para la operación de filtros prensa (deshidratación de mineral), aire de instrumentación y tareas de mantenimiento. La sustitución busca modernizar la infraestructura para mejorar la eficiencia energética, reducir costos operativos y garantizar la fiabilidad del sistema. Así, se minimizan las paradas no programadas y se asegura la continuidad del procesamiento de minerales.",
     image: "/images/projects/compresora-cpt12",
-  },
-  {
-    title:
-      "REEMPLAZO E INSTALACIÓN DE COLECTORES DE POLVO 05, 06 Y 07 CHANCADO SECUNDARIO - TOQUEPALA",
-    description:
-      "Este proyecto se enfoca en el desmontaje de tres colectores de polvo obsoletos y la ingeniería, suministro e instalación de tres nuevos sistemas de alta eficiencia en el área de Chancado Secundario de la concentradora de Toquepala. El objetivo es mejorar drásticamente el control de emisiones de polvo fugitivo generado en los procesos de trituración, transferencia en fajas y clasificación de mineral. Con esto se busca asegurar el cumplimiento de las normativas ambientales y de salud ocupacional, proteger los equipos mecánicos y eléctricos del área y crear un ambiente de trabajo más seguro.",
-    image: "/images/projects/colectores-polvo",
   },
   {
     title: "MODIFICACIONES AUXILIARES EN LA PLANTA DE FILTRADO",
