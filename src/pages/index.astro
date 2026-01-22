@@ -1,5 +1,5 @@
 ---
-import "../styles/globa.css"
+import "../styles/globa.css";
 import { clients, whyChooseUs } from "../data/home";
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
@@ -7,84 +7,112 @@ import ProjectsSection from "../components/ProjectsSection.astro";
 import ClientCard from "../components/ClientCard.astro";
 import FeatureCard from "../components/FeatureCard.astro";
 import CirculeCheck from "../assets/icons/CirculeCheck.astro";
-import LightBulb from "../assets/icons/LightBulb.astro"
+import LightBulb from "../assets/icons/LightBulb.astro";
 ---
 
-<link rel="prefetch" href="/contact" />
-<link rel="prefetch" href="/services" />
-<link rel="prefetch" href="/sales" />
-<link rel="prefetch" href="/certifications" />
-
-<Layout>
-  <link rel="prefetch" href="/contact" />
-  <link rel="prefetch" href="/services" />
-  <link rel="prefetch" href="/sales" />
-  <link rel="prefetch" href="/certifications" />
+<Layout 
+  title="Luang Asociados SAC - Ingeniería Minera y Construcción"
+  description="Empresa especialista en desarrollo de Ingeniería Básica, Ingeniería de Detalle, Gestión de Proyectos y Construcción en el sector Minero Metalúrgico"
+>
+  <!-- Prefetch solo las páginas más importantes -->
+  <link slot="head" rel="prefetch" href="/contact" />
+  <link slot="head" rel="prefetch" href="/services" />
+  
   <Hero />
-  <section class="container mx-auto py-20 bg-linear-to-b from-gray-50 to-white">
+  
+  <!-- Sección Sobre Nosotros -->
+  <section class="container mx-auto py-20 bg-gradient-to-b from-gray-50 to-white">
     <div class="mx-6">
-      <div class="flex items-center justify-center mb-8">
-        <div class="w-16 h-1 bg-linear-to-r from-primary to-blue-600 rounded-full"></div>
+      <div class="flex items-center justify-center mb-8" aria-hidden="true">
+        <div class="w-16 h-1 bg-gradient-to-r from-blue-900 to-blue-600 rounded-full"></div>
       </div>
-      <h2 class="text-4xl md:text-5xl font-bold text-center mb-8 text-gray-800">Sobre Nosotros</h2>
+      <h2 class="text-4xl md:text-5xl font-bold text-center mb-8 text-gray-800">
+        Sobre Nosotros
+      </h2>
       <div class="max-w-4xl mx-auto text-center">
         <p class="text-lg text-gray-700 leading-relaxed mb-6">
-          Somos una empresa especialista en el desarrollo de Ingeniería Básica, Ingeniería de Detalle, Gestión de Proyectos y Construcción en el sector Minero Metalúrgico.
+          Somos una empresa especialista en el desarrollo de Ingeniería Básica, 
+          Ingeniería de Detalle, Gestión de Proyectos y Construcción en el sector 
+          Minero Metalúrgico.
         </p>
         <p class="text-lg text-gray-700 leading-relaxed">
-          El personal Luang es un equipo de profesionales que ofrecen una ventaja única a sus clientes por la experiencia de haber trabajado por años en el rubro Minero. Esto nos permite maximizar el costo-beneficio, asegurando la confiabilidad y operatividad de sus proyectos. Independientemente el tamaño del proyecto, nuestra fortaleza radica en el valor agregado en las etapas tempranas de nuestros proyectos.
+          El personal Luang es un equipo de profesionales que ofrecen una ventaja 
+          única a sus clientes por la experiencia de haber trabajado por años en el 
+          rubro Minero. Esto nos permite maximizar el costo-beneficio, asegurando la 
+          confiabilidad y operatividad de sus proyectos. Independientemente el tamaño 
+          del proyecto, nuestra fortaleza radica en el valor agregado en las etapas 
+          tempranas de nuestros proyectos.
         </p>
       </div>
     </div>
   </section>
 
+  <!-- Sección Misión y Visión -->
   <section class="container mx-auto py-20 bg-white">
     <div class="mx-6">
-      <div class="flex items-center justify-center mb-8">
-        <div class="w-16 h-1 bg-linear-to-r from-primary to-blue-600 rounded-full"></div>
+      <div class="flex items-center justify-center mb-8" aria-hidden="true">
+        <div class="w-16 h-1 bg-gradient-to-r from-blue-900 to-blue-600 rounded-full"></div>
       </div>
-      <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800">Misión y Visión</h2>
+      <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800">
+        Misión y Visión
+      </h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-        <div class="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-100 hover:shadow-xl hover:border-primary/20 transition-all duration-300 group">
-          <div class="bg-linear-to-br from-primary/10 to-blue-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:from-primary/20 group-hover:to-blue-100 transition-all duration-300">
-            <CirculeCheck class="w-12 h-12 text-primary"/>
+        <article class="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-100 hover:shadow-xl hover:border-blue-900/20 transition-all duration-300 group">
+          <div class="bg-gradient-to-br from-blue-900/10 to-blue-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:from-blue-900/20 group-hover:to-blue-100 transition-all duration-300" aria-hidden="true">
+            <CirculeCheck class="w-12 h-12 text-blue-900" />
           </div>
-          <h3 class="text-2xl font-bold mb-4 text-primary">Misión</h3>
+          <h3 class="text-2xl font-bold mb-4 text-blue-900">Misión</h3>
           <p class="text-gray-700 leading-relaxed">
-            Con nuestra experiencia, conocimiento y responsabilidad del manejo de Ingenería, construcción, mantenimiento de infraestructura, linea de transmisión y equipos en el sector Minero Metalúrgico e industial ofrecemos a nuestros socios comerciales, asesoría, excelente servicio y apoyo constante de nuestros colaboradores
+            Con nuestra experiencia, conocimiento y responsabilidad del manejo de 
+            Ingeniería, construcción, mantenimiento de infraestructura, línea de 
+            transmisión y equipos en el sector Minero Metalúrgico e industrial 
+            ofrecemos a nuestros socios comerciales, asesoría, excelente servicio 
+            y apoyo constante de nuestros colaboradores
           </p>
-        </div>
-        <div class="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-100 hover:shadow-xl hover:border-primary/20 transition-all duration-300 group">
-          <div class="bg-linear-to-br from-primary/10 to-blue-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:from-primary/20 group-hover:to-blue-100 transition-all duration-300">
-            <LightBulb class="w-12 h-12 text-primary"/>
+        </article>
+        
+        <article class="text-center p-8 bg-white rounded-xl shadow-lg border border-gray-100 hover:shadow-xl hover:border-blue-900/20 transition-all duration-300 group">
+          <div class="bg-gradient-to-br from-blue-900/10 to-blue-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:from-blue-900/20 group-hover:to-blue-100 transition-all duration-300" aria-hidden="true">
+            <LightBulb class="w-12 h-12 text-blue-900" />
           </div>
-          <h3 class="text-2xl font-bold mb-4 text-primary">Visión</h3>
+          <h3 class="text-2xl font-bold mb-4 text-blue-900">Visión</h3>
           <p class="text-gray-700 leading-relaxed">
-            Obtener una posición de liderazgo y reconocimiento regional en el sector de Ingeniería, servicios y construcción, generando la preferencia de nuestros futuros socios comerciales por la calidad de nuestro servicio, productos y respaldo que ofrece nuestra empresa
+            Obtener una posición de liderazgo y reconocimiento regional en el sector 
+            de Ingeniería, servicios y construcción, generando la preferencia de 
+            nuestros futuros socios comerciales por la calidad de nuestro servicio, 
+            productos y respaldo que ofrece nuestra empresa
           </p>
-        </div>
+        </article>
       </div>
     </div>
   </section>
 
   <ProjectsSection />
+  
+  <!-- Sección Clientes Destacados -->
   <section class="container mx-auto py-20 bg-white">
     <div class="mx-6">
-      <div class="flex items-center justify-center mb-8">
-        <div class="w-16 h-1 bg-linear-to-r from-primary to-blue-600 rounded-full"></div>
+      <div class="flex items-center justify-center mb-8" aria-hidden="true">
+        <div class="w-16 h-1 bg-gradient-to-r from-blue-900 to-blue-600 rounded-full"></div>
       </div>
-      <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800">Clientes Destacados</h2>
+      <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800">
+        Clientes Destacados
+      </h2>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 lg:gap-8 max-w-7xl mx-auto">
         {clients.map((client) => <ClientCard {...client} />)}
       </div>
     </div>
   </section>
-  <section class="container mx-auto py-20 bg-linear-to-b from-gray-50 to-white">
+  
+  <!-- Sección ¿Por qué elegirnos? -->
+  <section class="container mx-auto py-20 bg-gradient-to-b from-gray-50 to-white">
     <div class="mx-6">
-      <div class="flex items-center justify-center mb-8">
-        <div class="w-16 h-1 bg-linear-to-r from-primary to-blue-600 rounded-full"></div>
+      <div class="flex items-center justify-center mb-8" aria-hidden="true">
+        <div class="w-16 h-1 bg-gradient-to-r from-blue-900 to-blue-600 rounded-full"></div>
       </div>
-      <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800">¿Por qué elegirnos?</h2>
+      <h2 class="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-800">
+        ¿Por qué elegirnos?
+      </h2>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
         {whyChooseUs.map((feature) => <FeatureCard {...feature} />)}
       </div>
