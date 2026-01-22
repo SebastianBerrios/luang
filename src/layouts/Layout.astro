@@ -1,36 +1,79 @@
 ---
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
+const {
+  title = "Luang Asociados SAC - Ingeniería Minera y Construcción",
+  description = "Somos una empresa especialista en el desarrollo de Ingeniería Básica, Ingeniería de Detalle, Gestión de Proyectos y Construcción en el sector Minero Metalúrgico con un personal totalmente especializado.",
+  image = "/luang.webp"
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
 <html lang="es">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<title>Luang</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Preconnect para recursos externos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    
+    <title>{title}</title>
+    <meta name="description" content={description} />
 
-		<meta name="description" content="Somos una empresa especialista en el desarrollo de Ingeniería Básica, Ingeniería de Detalle, Gestión de Proyectos y Construcción en el sector Minero Metalúrgico con un personal totalmente especializado." />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:image:alt" content="Luang Asociados SAC" />
 
-		<!-- Open Graph (para redes sociales) -->
-		<meta property="og:title" content="Luang Asociados SAC" />
-		<meta property="og:description" content="Somos una empresa especialista en el desarrollo de Ingeniería Básica, Ingeniería de Detalle, Gestión de Proyectos y Construcción en el sector Minero Metalúrgico con un personal totalmente especializado." />
-		<meta property="og:image" content="/luang.webp" />
-		<meta property="og:image:alt" content="Luang Asociados SAC"/>
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={new URL(image, Astro.site)} />
 
-		<link rel="canonical" href="https://luang.com.pe/">
+    <link rel="canonical" href={canonicalURL} />
 
-		<meta name="robots" content="index, follow">
-		<meta name="theme-color" content="#1e3a8a">
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#1e3a8a" />
 
-		<link rel="icon" type="image/svg+xml" href="/isotipo.svg" />
-		<link rel="preload" href="/luang.webp" as="image" />
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/isotipo.svg" />
+    <link rel="apple-touch-icon" href="/isotipo.svg" />
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" as="image" href="/luang.webp" type="image/webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="/isotipo.svg" type="image/svg+xml" />
+    
+    <meta name="generator" content={Astro.generator} />
 
-		<meta name="generator" content={Astro.generator} />
-	</head>
-	<body>
-		<Header/>
-		<slot />
-		<Footer />
-	</body>
+    <!-- Critical CSS inline (se generará automáticamente) -->
+    <style is:inline>
+      html{scroll-behavior:smooth}
+      body{margin:0;font-family:system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+      *{box-sizing:border-box}
+    </style>
+  </head>
+  <body>
+    <Header />
+    <main id="main-content">
+      <slot />
+    </main>
+    <Footer />
+  </body>
 </html>
