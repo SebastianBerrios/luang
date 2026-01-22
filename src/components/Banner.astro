@@ -12,6 +12,10 @@ const { image, title, description } = Astro.props;
       class="w-full h-full object-cover"
       src={image}
       alt={title}
+      width={2560}
+      height={1440}
+      quality={85}
+      sizes="100vw"
     />
     <div class="absolute inset-0 bg-blue-900/75"></div>
   </div>
