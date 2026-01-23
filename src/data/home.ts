@@ -9,6 +9,11 @@ export interface InfoCardProps {
   description: string;
 }
 
+export interface ClientProps {
+  name: string;
+  logo: string;
+}
+
 export const projects: HomeProps[] = [
   {
     title:
@@ -75,31 +80,26 @@ export const projects: HomeProps[] = [
   },*/
 ];
 
-export const clients: HomeProps[] = [
+export const clients: ClientProps[] = [
   {
-    description:
-      "Empresa de clase minero–metalúrgica mundial, productora de cobre y subproductos valiosos.",
-    image: "/images/clients/southern.webp",
+    name: "Southern Peru Copper Corporation",
+    logo: "/images/clients/southern.webp",
   },
   {
-    description:
-      "Órgano público encargado de la administración superior del departamento de Tacna, Perú.",
-    image: "/images/clients/goretacna.webp",
+    name: "Gobierno Regional de Tacna",
+    logo: "/images/clients/goretacna.webp",
   },
   {
-    description:
-      "Organo público encargado de administrar los tributos internos del Gobierno Nacional.",
-    image: "/images/clients/sunat.webp",
+    name: "SUNAT",
+    logo: "/images/clients/sunat.webp",
   },
   {
-    description:
-      "Compañia dedicada a la extracción de minerales polimetálicos y con presencia en el sur del país.",
-    image: "/images/clients/minerabetas.webp",
+    name: "Minera Betas",
+    logo: "/images/clients/minerabetas.webp",
   },
   {
-    description:
-      "Empresa minera canadiense de metales preciosos con minas y proyectos en América y África Occidental.",
-    image: "/images/clients/fortunasilvermines.webp",
+    name: "Fortuna Silver Mines",
+    logo: "/images/clients/fortunasilvermines.webp",
   },
 ];
 

@@ -1,26 +1,30 @@
 ---
-import "../styles/globa.css"
-import { Image } from "astro:assets";
-const { description, image } = Astro.props;
+import { Image } from 'astro:assets';
+
+interface Props {
+  name: string;
+  logo: string;
+}
+
+const { name, logo } = Astro.props;
 ---
 
-<div
-  class="relative flex items-center justify-center overflow-hidden rounded-xl group bg-white p-5 shadow-lg border border-gray-100 hover:shadow-xl hover:border-primary/20 transition-all duration-300 min-h-[240px] md:min-h-[280px]"
+<article 
+  class="group bg-white p-4 md:p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary/30 transform hover:scale-105"
+  aria-label={`Cliente: ${name}`}
 >
-  <Image
-    src={image}
-    alt={description}
-    class="w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-105"
-    width={600}
-    height={500}
-    loading="lazy"
-    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-  />
-  <div
-    class="absolute inset-0 bg-linear-to-t from-black/80 via-black/50 to-transparent flex items-end justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"
-  >
-    <h3 class="text-white text-sm md:text-base font-bold text-center pb-4 px-4">{description}</h3>
+  <div class="flex items-center justify-center h-24 md:h-32">
+    <Image
+      src={logo}
+      alt={`Logo de ${name}`}
+      width={200}
+      height={100}
+      loading="lazy"
+      decoding="async"
+      class="max-w-full max-h-full object-contain grayscale group-hover:grayscale-0 transition-all duration-300"
+      formats={['avif', 'webp']}
+      quality={80}
+    />
   </div>
-  <div class="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-all duration-300 rounded-xl"></div>
-</div>
-
+  <p class="sr-only">{name}</p>
+</article>

@@ -1,44 +1,54 @@
 ---
-import "../styles/globa.css"
 import { Image } from 'astro:assets';
-import heroHome1 from "/public/images/hero/home/image01.webp"
-import heroHome2 from "/public/images/hero/home/image02.webp"
-import heroHome3 from "/public/images/hero/home/image03.webp"
-import heroHome4 from "/public/images/hero/home/image04.webp"
+import heroHome1 from "/public/images/hero/home/image01.webp";
+import heroHome2 from "/public/images/hero/home/image02.webp";
+import heroHome3 from "/public/images/hero/home/image03.webp";
+import heroHome4 from "/public/images/hero/home/image04.webp";
 
-const heroImages = [heroHome1, heroHome2, heroHome3, heroHome4];
+const heroImages = [
+  { src: heroHome1, alt: "Proyecto de ingeniería minera 1" },
+  { src: heroHome2, alt: "Construcción en sector minero 2" },
+  { src: heroHome3, alt: "Gestión de proyectos mineros 3" },
+  { src: heroHome4, alt: "Infraestructura industrial 4" }
+];
 ---
 
-<section class="relative min-h-screen">
-  <div class="absolute inset-0 bg-cover bg-center bg-no-repeat">
+<section class="relative min-h-screen overflow-hidden" aria-label="Banner principal">
+  <div class="absolute inset-0">
     <div id="hero-slideshow" class="relative w-full h-full">
       {heroImages.map((image, index) => (
         <Image
           class={`hero-slide absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
             index === 0 ? 'opacity-100' : 'opacity-0'
           }`}
-          src={image}
-          alt={`Hero image ${index + 1}`}
-          width={2560}
-          height={1440}
-          quality={85}
+          src={image.src}
+          alt={image.alt}
+          width={1920}
+          height={1080}
+          quality={index === 0 ? 90 : 75}
+          loading={index === 0 ? "eager" : "lazy"}
+          decoding={index === 0 ? "sync" : "async"}
+          fetchpriority={index === 0 ? "high" : "low"}
+          formats={['avif', 'webp']}
           sizes="100vw"
           data-index={index}
         />
       ))}
     </div>
-    <div class="absolute inset-0 bg-black/50"></div>
+    <div class="absolute inset-0 bg-black/50" aria-hidden="true"></div>
   </div>
-  <div class="relative h-full flex items-center justify-center py-16">
-    <div class="text-center text-white px-4 max-w-4xl mx-auto">
-      <h1 class="text-4xl md:text-6xl font-bold mb-6">
+
+  <div class="relative h-full flex items-center justify-center py-16 px-4">
+    <div class="text-center text-white max-w-4xl mx-auto">
+      <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
         Ofrecemos ingeniería básica y de detalle, gestión de proyectos y
         construcción en el sector minero.
       </h1>
       <p class="text-xl md:text-2xl mb-8">Una solución para cada cliente</p>
       <a
         href="/contact"
-        class="inline-block bg-linear-to-r from-primary to-blue-700 text-white px-6 py-2.5 rounded-lg text-base font-semibold hover:from-blue-700 hover:to-primary transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+        class="inline-block bg-primary text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-800 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+        aria-label="Contactar con Luang Asociados"
       >
         Contáctanos
       </a>
@@ -46,34 +56,66 @@ const heroImages = [heroHome1, heroHome2, heroHome3, heroHome4];
   </div>
 </section>
 
-<script is:inline>
-  // Intervalo de cambio de imagen en milisegundos (5 segundos por defecto)
+<script>
+  // Optimized slideshow con intersection observer
   const INTERVAL_TIME = 5000;
   
-  // Esperar a que el DOM esté listo
-  document.addEventListener('DOMContentLoaded', function() {
-    // Obtener todas las imágenes del slideshow
+  function initSlideshow() {
     const slides = document.querySelectorAll('.hero-slide');
+    if (slides.length <= 1) return;
+    
     let currentIndex = 0;
+    let intervalId: number | null = null;
     
     function showNextImage() {
-      if (slides.length <= 1) return;
-      
-      // Ocultar imagen actual
-      slides[currentIndex].classList.remove('opacity-100');
-      slides[currentIndex].classList.add('opacity-0');
-      
-      // Calcular siguiente índice
+      slides[currentIndex]?.classList.replace('opacity-100', 'opacity-0');
       currentIndex = (currentIndex + 1) % slides.length;
-      
-      // Mostrar siguiente imagen
-      slides[currentIndex].classList.remove('opacity-0');
-      slides[currentIndex].classList.add('opacity-100');
+      slides[currentIndex]?.classList.replace('opacity-0', 'opacity-100');
     }
     
-    // Iniciar el slideshow automático solo si hay más de una imagen
-    if (slides.length > 1) {
-      setInterval(showNextImage, INTERVAL_TIME);
+    function startSlideshow() {
+      if (!intervalId) {
+        intervalId = window.setInterval(showNextImage, INTERVAL_TIME);
+      }
     }
-  });
+    
+    function stopSlideshow() {
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    }
+    
+    // Pausar cuando no está visible (optimización de rendimiento)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            startSlideshow();
+          } else {
+            stopSlideshow();
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+    
+    const slideshow = document.getElementById('hero-slideshow');
+    if (slideshow) {
+      observer.observe(slideshow);
+    }
+    
+    // Limpiar al desmontar
+    document.addEventListener('astro:before-swap', () => {
+      stopSlideshow();
+      observer.disconnect();
+    });
+  }
+  
+  // Iniciar cuando el DOM esté listo
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSlideshow);
+  } else {
+    initSlideshow();
+  }
 </script>
