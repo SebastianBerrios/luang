@@ -29,7 +29,7 @@ const heroImages = [
           loading={index === 0 ? "eager" : "lazy"}
           decoding={index === 0 ? "sync" : "async"}
           fetchpriority={index === 0 ? "high" : "low"}
-          formats={['avif', 'webp']}
+          format="webp"
           sizes="100vw"
           data-index={index}
         />
