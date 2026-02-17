@@ -1,5 +1,6 @@
 ---
 import "../styles/globa.css";
+import { getImage } from "astro:assets";
 import { clients, whyChooseUs } from "../data/home";
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
@@ -8,12 +9,25 @@ import ClientCard from "../components/ClientCard.astro";
 import FeatureCard from "../components/FeatureCard.astro";
 import CirculeCheck from "../assets/icons/CirculeCheck.astro";
 import LightBulb from "../assets/icons/LightBulb.astro";
+import heroHome1 from "/public/images/hero/home/image01.webp";
+
+// Obtener la URL real del primer hero (procesada por Astro en build time)
+// para inyectarla como preload LCP en el <head>
+const heroLcpImage = await getImage({
+  src: heroHome1,
+  width: 1920,
+  height: 1080,
+  format: "webp",
+  quality: 90,
+});
 ---
 
 <Layout 
   title="Luang Asociados SAC - Ingeniería Minera y Construcción"
   description="Empresa especialista en desarrollo de Ingeniería Básica, Ingeniería de Detalle, Gestión de Proyectos y Construcción en el sector Minero Metalúrgico"
 >
+  <!-- Preload del hero LCP (primera imagen del slideshow, URL hasheada por Astro) -->
+  <link slot="head" rel="preload" as="image" href={heroLcpImage.src} type="image/webp" fetchpriority="high" />
   <!-- Prefetch solo las páginas más importantes -->
   <link slot="head" rel="prefetch" href="/contact" />
   <link slot="head" rel="prefetch" href="/services" />

@@ -6,6 +6,7 @@ import compress from "astro-compress";
 // https://astro.build/config
 export default defineConfig({
   output: "static",
+  site: "https://luangasociadossac.vercel.app",
   
   vite: {
     plugins: [tailwindcss()],

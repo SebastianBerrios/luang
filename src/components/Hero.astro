@@ -30,6 +30,7 @@ const heroImages = [
           decoding={index === 0 ? "sync" : "async"}
           fetchpriority={index === 0 ? "high" : "low"}
           format="webp"
+          widths={index === 0 ? [640, 960, 1280, 1920] : [960, 1920]}
           sizes="100vw"
           data-index={index}
         />

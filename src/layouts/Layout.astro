@@ -23,12 +23,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     
-    <!-- Preconnect para recursos externos -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-    
-    <!-- DNS Prefetch -->
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    
     <title>{title}</title>
     <meta name="description" content={description} />
 
@@ -56,9 +50,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="icon" type="image/svg+xml" href="/isotipo.svg" />
     <link rel="apple-touch-icon" href="/isotipo.svg" />
     
-    <!-- Preload critical assets -->
-    <link rel="preload" as="image" href="/luang.webp" type="image/webp" fetchpriority="high" />
-    <link rel="preload" as="image" href="/isotipo.svg" type="image/svg+xml" />
+    <!-- Preload logo visible en el header -->
+    <link rel="preload" as="image" href="/imagotipo.svg" type="image/svg+xml" fetchpriority="high" />
     
     <meta name="generator" content={Astro.generator} />
 

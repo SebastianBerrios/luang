@@ -28,7 +28,7 @@ const { title, description, projectId, images } = Astro.props;
               index === 0 ? "opacity-100" : "opacity-0"
             }`}
             data-index={index}
-            loading={index === 0 ? "eager" : "lazy"}
+            loading="lazy"
           />
         ))
       ) : (

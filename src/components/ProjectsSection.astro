@@ -48,7 +48,7 @@ const projectsWithImages = projects.map((project, index) => ({
 ))}
 
 <script>
-  const modalContainers = new Map();
+  const modalContainers = new Map<string, Element>();
   let currentModalId: string | null = null;
 
   // Inicializar contenedores de modal
@@ -61,185 +61,173 @@ const projectsWithImages = projects.map((project, index) => ({
     });
   });
 
-  // Función para cerrar modal - MEJORADA para debugging
   function closeModal() {
-    console.log("closeModal() llamada, currentModalId:", currentModalId);
     if (!currentModalId) return;
-    
+
     const modal = document.getElementById("modal-" + currentModalId);
     if (modal) {
       modal.style.display = "none";
-      console.log("Modal ocultado:", currentModalId);
     }
     document.body.style.overflow = "";
-    
+
     const container = modalContainers.get(currentModalId);
     if (container) {
       container.innerHTML = "";
     }
-    
+
     currentModalId = null;
   }
 
-  // Listener para abrir el modal desde los botones
+  // Listener para abrir el modal desde las tarjetas de proyecto
   document.addEventListener("openProjectModal", (e) => {
     const detail = (e as CustomEvent).detail;
-    openModal(detail.id, detail.title, detail.description, detail.images);
+    openModal(detail.projectId, detail.title, detail.description, detail.images);
   });
 
-  function closeAllModals() {
-    // Cerrar cualquier modal abierto
-    closeModal();
-  }
-
   function openModal(projectId: string, title: string, description: string, images: string[]) {
-    console.log("Abriendo modal para proyecto:", projectId);
-    closeAllModals();
+    if (currentModalId) closeModal();
 
     currentModalId = projectId;
 
     const container = modalContainers.get(projectId);
     if (!container) {
-      console.error("No se encontró contenedor para:", projectId);
+      console.error("No se encontró el contenedor para el proyecto:", projectId);
       return;
     }
 
-    // Limpiar contenedor antes de agregar contenido
     container.innerHTML = "";
-
-    // Crear el HTML del modal
     const modalHTML = createModalHTML(projectId, title, description, images);
-
-    // Insertar el modal en el contenedor
     container.innerHTML = modalHTML;
 
-    // Obtener el modal recién creado
-    const modal = document.getElementById(`modal-${projectId}`);
+    const modal = container.querySelector(".modal-backdrop");
     if (!modal) {
-      console.error("No se pudo crear el modal");
+      console.error("No se pudo encontrar el elemento modal después de crearlo");
       return;
     }
 
-    // Mostrar el modal
     (modal as HTMLElement).style.display = "flex";
     document.body.style.overflow = "hidden";
 
-    // Configurar event listeners
     setupCloseListeners(projectId);
 
-    // Inicializar carrusel de imágenes
     setTimeout(() => {
-      initializeModal(projectId, images);
-    }, 100);
-
-    console.log("Modal creado y configurado para", projectId);
+      try {
+        initializeModal(projectId, images);
+      } catch (error) {
+        console.error("Error al inicializar modal:", error);
+      }
+    }, 50);
   }
 
   function setupCloseListeners(projectId: string) {
-    const modal = document.getElementById(`modal-${projectId}`);
-    const closeBtns = modal?.querySelectorAll(".close-modal");
+    const modalBackdrop = document.getElementById("modal-" + projectId);
+    if (!modalBackdrop) return;
 
-    closeBtns?.forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
+    // Botón de cerrar (X)
+    const closeBtn = modalBackdrop.querySelector(".modal-close");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", (e) => {
         e.stopPropagation();
-        console.log("Botón cerrar clickeado");
         closeModal();
       });
-    });
+    }
 
-    // Click en el backdrop
-    modal?.addEventListener("click", (e) => {
-      console.log("Click detectado en:", (e.target as HTMLElement).className);
+    // Backdrop click — cerrar solo si el click es directamente en el fondo oscuro
+    modalBackdrop.addEventListener("click", (e) => {
       if ((e.target as HTMLElement).classList.contains('modal-backdrop')) {
-        console.log("Click en backdrop, cerrando modal");
         closeModal();
       }
     });
-  }
 
-  // Cerrar modal con tecla Escape
-  function handleEscape(e: KeyboardEvent) {
-    if (e.key === "Escape") {
-      closeAllModals();
+    // Keyboard Escape
+    function handleEscape(e: KeyboardEvent) {
+      if (e.key === "Escape" && currentModalId === projectId) {
+        closeModal();
+        document.removeEventListener("keydown", handleEscape);
+      }
     }
-  }
-
-  if (typeof window !== "undefined") {
     document.addEventListener("keydown", handleEscape);
   }
 
   function createModalHTML(projectId: string, title: string, description: string, images: string[]) {
-    console.log("Creando HTML del modal con", images.length, "imágenes");
-
-    const escapeHtml = function(text: string) {
-      const div = document.createElement("div");
+    const escapeHtml = (text: string) => {
+      const div = document.createElement('div');
       div.textContent = text;
       return div.innerHTML;
     };
 
-    const safeTitle = escapeHtml(title);
-    const safeDescription = escapeHtml(description);
+    const safeTitle = escapeHtml(title || "");
+    const safeDescription = escapeHtml(description || "");
 
     let slidesHTML = "";
-    if (images.length > 0) {
-      slidesHTML = images
-        .map((imgPath, index) => {
-          return `
-          <div class="modal-slide ${index === 0 ? "active" : ""}" data-index="${index}">
-            <img 
-              src="${imgPath}" 
-              alt="${safeTitle} - Imagen ${index + 1}"
-              class="modal-image"
-              loading="${index === 0 ? "eager" : "lazy"}"
-            />
+    if (Array.isArray(images) && images.length > 0) {
+      slidesHTML = images.map((imgPath, index) => {
+        const safePath = escapeHtml(imgPath);
+        const isFirst = index === 0;
+        return `
+          <div class="modal-slide-wrapper absolute inset-0 transition-opacity duration-500 ease-in-out ${isFirst ? 'opacity-100 z-10' : 'opacity-0 z-0'}" data-index="${index}">
+            <div class="absolute inset-0 bg-cover bg-center blur-2xl opacity-40" style="background-image: url('${safePath}');"></div>
+            <img src="${safePath}" alt="${safeTitle} - Imagen ${index + 1}" class="relative w-full h-full object-contain z-10" loading="${isFirst ? 'eager' : 'lazy'}" onerror="this.parentElement.style.display='none';" />
           </div>
         `;
-        })
-        .join("");
+      }).join("");
     } else {
-      slidesHTML =
-        '<div class="flex items-center justify-center h-full"><p class="text-gray-500">No hay imágenes disponibles</p></div>';
+      slidesHTML = '<div class="absolute inset-0 flex items-center justify-center text-gray-400"><p>No hay imágenes disponibles</p></div>';
     }
 
-    const navigationHTML =
-      images.length > 1
-        ? `
-      <button class="modal-nav modal-prev" aria-label="Imagen anterior">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    let dotsHTML = "";
+    if (Array.isArray(images) && images.length > 1) {
+      dotsHTML = images.map((_, index) => {
+        const isFirst = index === 0;
+        return `<button class="modal-dot w-2 h-2 rounded-full transition-all duration-200 ${isFirst ? 'bg-white w-8' : 'bg-white/50'}" data-index="${index}" aria-label="Ir a imagen ${index + 1}"></button>`;
+      }).join("");
+    }
+
+    const navigationHTML = (Array.isArray(images) && images.length > 1) ? `
+      <button class="modal-prev absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 md:p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-20" aria-label="Imagen anterior">
+        <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
       </button>
-      <button class="modal-nav modal-next" aria-label="Imagen siguiente">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button class="modal-next absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 md:p-3 rounded-full shadow-lg transition-all duration-200 hover:scale-110 z-20" aria-label="Imagen siguiente">
+        <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
       </button>
-      <div class="modal-dots">
-        ${images.map((_, i) => `<button class="dot ${i === 0 ? "active" : ""}" data-index="${i}"></button>`).join("")}
+      <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+        ${dotsHTML}
       </div>
-    `
-        : "";
+    ` : "";
+
+    const descriptionHTML = safeDescription ? `
+      <div class="p-4 md:p-6 bg-white">
+        <p class="text-gray-700 leading-relaxed text-base md:text-lg">${safeDescription}</p>
+      </div>
+    ` : "";
 
     return `
-      <div id="modal-${projectId}" class="modal-backdrop" role="dialog" aria-modal="true">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2 class="modal-title">${safeTitle}</h2>
-            <button class="close-modal" aria-label="Cerrar modal">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="modal-slider">
-              ${slidesHTML}
+      <div id="modal-${escapeHtml(projectId)}" class="modal-backdrop fixed inset-0 z-50 bg-black/80 backdrop-blur-sm p-4" role="dialog" aria-modal="true" aria-labelledby="modal-title-${escapeHtml(projectId)}">
+        <div class="flex items-center justify-center w-full h-full">
+          <div class="modal-content-wrapper relative w-full max-w-4xl max-h-[90vh] bg-white rounded-xl shadow-2xl overflow-y-auto flex flex-col">
+            <div class="flex items-center justify-between p-4 md:p-6 border-b border-gray-200 bg-white sticky top-0 z-10 flex-shrink-0">
+              <h2 id="modal-title-${escapeHtml(projectId)}" class="text-xl md:text-2xl font-bold text-gray-800 pr-4">
+                ${safeTitle}
+              </h2>
+              <button class="modal-close text-gray-500 hover:text-gray-700 transition-colors duration-200 p-2 hover:bg-gray-100 rounded-full flex-shrink-0" aria-label="Cerrar modal">
+                <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
-            ${navigationHTML}
-          </div>
-          <div class="modal-footer">
-            <p class="modal-description">${safeDescription}</p>
+            <div class="flex-1">
+              <div class="relative w-full h-[40vh] md:h-[55vh] bg-gray-100 overflow-hidden flex items-center justify-center">
+                <div class="modal-slider-container relative w-full h-full" data-project-id="${escapeHtml(projectId)}">
+                  ${slidesHTML}
+                </div>
+                ${navigationHTML}
+              </div>
+              ${descriptionHTML}
+            </div>
           </div>
         </div>
       </div>
@@ -247,140 +235,96 @@ const projectsWithImages = projects.map((project, index) => ({
   }
 
   function initializeModal(projectId: string, images: string[]) {
-    console.log("Inicializando modal para", projectId, "con", images.length, "imágenes");
-    const modal = document.getElementById(`modal-${projectId}`);
-    if (!modal) {
-      console.warn("No se encontró el modal:", projectId);
-      return;
-    }
+    const modal = document.getElementById("modal-" + projectId);
+    if (!modal) return;
 
-    if (images.length <= 1) {
-      console.log("Solo hay una imagen, no se necesita carrusel");
-      return;
-    }
+    const sliderContainer = modal.querySelector(".modal-slider-container");
+    if (!sliderContainer) return;
 
-    const slides = modal.querySelectorAll(".modal-slide");
-    const prevBtn = modal.querySelector(".modal-prev");
-    const nextBtn = modal.querySelector(".modal-next");
-    const dotsContainer = modal.querySelector(".modal-dots");
-    const dots = modal.querySelectorAll(".dot");
-
-    if (slides.length === 0) {
-      console.warn("No se encontraron slides");
-      return;
-    }
-
-    let currentSlideIndex = 0;
-
-    console.log("Configurando carrusel con", slides.length, "slides");
+    const slides = Array.from(sliderContainer.querySelectorAll(".modal-slide-wrapper")) as HTMLElement[];
+    if (slides.length === 0) return;
 
     // Asegurar que el primer slide sea visible
-    const firstSlide = slides[0];
-    if (firstSlide) {
-      console.log("Primer slide encontrado:", firstSlide);
-      
-      // Limpiar estados de todos los slides primero
-      slides.forEach((slide, idx) => {
-        if (idx !== 0) {
-          if (slide && (slide as HTMLElement).style) {
-            (slide as HTMLElement).style.opacity = "0";
-            (slide as HTMLElement).style.zIndex = "0";
-          }
-        }
-      });
+    slides.forEach((slide, i) => {
+      slide.style.opacity = i === 0 ? "1" : "0";
+      slide.style.zIndex = i === 0 ? "10" : "0";
+    });
 
-      // Configurar primer slide
-      if (firstSlide && (firstSlide as HTMLElement).style) {
-        (firstSlide as HTMLElement).style.opacity = "1";
-        (firstSlide as HTMLElement).style.zIndex = "10";
-      }
+    if (slides.length <= 1) {
+      const prevBtn = modal.querySelector(".modal-prev") as HTMLElement | null;
+      const nextBtn = modal.querySelector(".modal-next") as HTMLElement | null;
+      const dotsContainer = modal.querySelector(".absolute.bottom-4") as HTMLElement | null;
+      if (prevBtn) prevBtn.style.display = "none";
+      if (nextBtn) nextBtn.style.display = "none";
+      if (dotsContainer) dotsContainer.style.display = "none";
+      return;
+    }
 
-      // Si solo hay 1 imagen, ocultar controles
-      if (slides.length <= 1) {
-        if (prevBtn) (prevBtn as HTMLElement).style.display = "none";
-        if (nextBtn) (nextBtn as HTMLElement).style.display = "none";
-        if (dotsContainer) (dotsContainer as HTMLElement).style.display = "none";
-      }
+    setupNavigation();
 
-      updateDots(currentSlideIndex);
-
-      console.log("Primer slide configurado");
-      setTimeout(() => {
-        console.log("Slider inicializado para", projectId);
-      }, 100);
+    function setupNavigation() {
+      let currentIndex = 0;
 
       function showSlide(index: number) {
-        console.log("Mostrando slide:", index);
-        const slide = slides[index];
-        if (slide && (slide as HTMLElement).style) {
-          slides.forEach((s: Element) => {
-            (s as HTMLElement).style.opacity = "0";
-            (s as HTMLElement).style.zIndex = "0";
-          });
-          (slide as HTMLElement).style.opacity = "1";
-          (slide as HTMLElement).style.zIndex = "10";
-          currentSlideIndex = index;
-          updateDots(index);
-        } else {
-          console.warn("Slide no encontrado:", index);
-        }
+        if (index < 0 || index >= slides.length) return;
+        slides.forEach((slide, i) => {
+          slide.style.opacity = i === index ? "1" : "0";
+          slide.style.zIndex = i === index ? "10" : "0";
+        });
+        updateDots(index);
       }
 
       function updateDots(index: number) {
-        const allDots = dotsContainer?.querySelectorAll(".dot");
-        allDots?.forEach((dot, i) => {
+        const dots = modal!.querySelectorAll(".modal-dot");
+        dots.forEach((dot, i) => {
           if (i === index) {
-            dot.classList.add("active");
+            dot.classList.add("bg-white", "w-8");
+            dot.classList.remove("bg-white/50");
           } else {
-            dot.classList.remove("active");
+            dot.classList.remove("bg-white", "w-8");
+            dot.classList.add("bg-white/50");
           }
         });
       }
 
-      function nextSlide() {
-        const newIndex = (currentSlideIndex + 1) % slides.length;
-        showSlide(newIndex);
-      }
-
-      function prevSlide() {
-        const newIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
-        showSlide(newIndex);
-      }
-
-      prevBtn?.addEventListener("click", (e) => {
-        e.stopPropagation();
-        prevSlide();
-      });
+      const nextBtn = modal!.querySelector(".modal-next");
+      const prevBtn = modal!.querySelector(".modal-prev");
 
       nextBtn?.addEventListener("click", (e) => {
         e.stopPropagation();
-        nextSlide();
+        currentIndex = (currentIndex + 1) % slides.length;
+        showSlide(currentIndex);
       });
 
-      dots?.forEach((dot, index) => {
+      prevBtn?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        showSlide(currentIndex);
+      });
+
+      const dots = modal!.querySelectorAll(".modal-dot");
+      dots.forEach((dot, i) => {
         dot.addEventListener("click", (e) => {
           e.stopPropagation();
-          showSlide(index);
+          currentIndex = i;
+          showSlide(currentIndex);
         });
       });
 
-      // Navegación con teclado
-      modal.setAttribute("tabindex", "0");
-      modal.addEventListener("keydown", (e) => {
-        modal.focus();
+      modal!.addEventListener("keydown", (e: Event) => {
+        const ke = e as KeyboardEvent;
+        if (ke.key === "ArrowLeft") {
+          ke.preventDefault();
+          currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+          showSlide(currentIndex);
+        } else if (ke.key === "ArrowRight") {
+          ke.preventDefault();
+          currentIndex = (currentIndex + 1) % slides.length;
+          showSlide(currentIndex);
+        }
       });
 
-      function handleKeyDown(e: KeyboardEvent) {
-        if (e.key === "ArrowLeft") {
-          e.preventDefault();
-          prevBtn?.click();
-        } else if (e.key === "ArrowRight") {
-          e.preventDefault();
-          nextBtn?.click();
-        }
-      }
-
-      modal.addEventListener("keydown", handleKeyDown);
+      showSlide(0);
     }
   }
 </script>
